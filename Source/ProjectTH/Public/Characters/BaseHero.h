@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "THTypes.h"
 #include "BaseHero.generated.h"
 
 class UInputMappingContext;
@@ -28,8 +29,13 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void PawnClientRestart() override;
+	virtual class UTHAbilitySystemComponent* GetAbilitySystemComponent();
 
 public:	
+	/** Hero Data */
+	UPROPERTY(EditDefaultsOnly)
+	class UHeroData* HeroData;
+
 	/** Enhanced Input */
 	UPROPERTY(EditDefaultsOnly)
 	UInputMappingContext* DefaultMappingContext;
@@ -49,4 +55,9 @@ public:
 	void OnJumpActionEnd();
 	virtual void Landed(const FHitResult& Hit) override;
 
+public:
+	virtual void InitializeAttributes();
+	virtual void GiveAbilities();
+	virtual void PossessedBy(AController* NewController) override;
+	virtual void OnRep_PlayerState() override;
 };
