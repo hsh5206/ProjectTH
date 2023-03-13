@@ -6,6 +6,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PlayerState.h"
+#include "Blueprint/UserWidget.h"
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -41,12 +42,15 @@ ABaseHero::ABaseHero()
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 0.f, 1000.f);
 	GetCharacterMovement()->MaxWalkSpeed = 500.f;
+
+	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -88.f));
+	GetMesh()->SetRelativeRotation(FRotator(0.f, 0.f, -80.f));
 }
 
 void ABaseHero::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 void ABaseHero::PawnClientRestart()
