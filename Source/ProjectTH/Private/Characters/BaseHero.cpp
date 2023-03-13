@@ -8,6 +8,7 @@
 #include "GameFramework/PlayerState.h"
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/WidgetComponent.h"
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -20,6 +21,8 @@
 #include "AbilitySystem/THGameplayAbility.h"
 #include "DataAssets/HeroData.h"
 #include "Projectiles/BaseProjectile.h"
+#include "Widgets/Widget_HealthBar.h"
+#include "AbilitySystem/THAttributeSet.h"
 
 #include "DrawDebugHelpers.h"
 
@@ -51,12 +54,22 @@ ABaseHero::ABaseHero()
 
 	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -88.f));
 	GetMesh()->SetRelativeRotation(FRotator(0.f, 0.f, -80.f));
+
+	HealthBarWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBar"));
+	HealthBarWidget->SetupAttachment(GetRootComponent());
 }
 
 void ABaseHero::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (HealthBarWidget->GetWidget())
+	{
+		if (ATHPlayerState* THPS = Cast<ATHPlayerState>(GetPlayerState()))
+		{
+			Cast<UWidget_HealthBar>(HealthBarWidget->GetWidget())->SetHPBarPercent(THPS->GetAttributeSet()->GetHealth(), THPS->GetAttributeSet()->GetMaxHealth());
+		}
+	}
 }
 
 void ABaseHero::PawnClientRestart()

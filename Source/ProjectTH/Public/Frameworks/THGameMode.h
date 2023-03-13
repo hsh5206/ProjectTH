@@ -20,6 +20,8 @@ public:
 	virtual void Logout(AController* Exiting) override;
 
 	virtual void SpawnPlayer(APlayerController* PC, TSubclassOf<class ABaseHero> Hero);
+	UFUNCTION(BlueprintCallable)
+	TArray<APlayerController*> GetPlayercontrollersOnGame() { return PlayerControllersOnGame; }
 
 protected:
 	TArray<APlayerController*> PlayerControllersOnGame;

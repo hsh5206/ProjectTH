@@ -23,7 +23,7 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = Camera)
 	class USpringArmComponent* SpringArm;
-	UPROPERTY(EditAnywhere, Category = Camera)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera)
 	class UCameraComponent* Camera;
 
 	virtual class UTHAbilitySystemComponent* GetAbilitySystemComponent();
@@ -66,6 +66,10 @@ public:
 	/** Projectile */
 	UPROPERTY(BlueprintReadOnly)
 	FHitResult CrossHairHitResult;
+
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class UWidgetComponent* HealthBarWidget;
 
 public:
 	virtual void InitializeAttributes();

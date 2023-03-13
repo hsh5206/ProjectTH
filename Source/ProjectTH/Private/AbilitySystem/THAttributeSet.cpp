@@ -3,6 +3,10 @@
 
 #include "AbilitySystem/THAttributeSet.h"
 #include "Net/UnrealNetwork.h"
+#include "Components/WidgetComponent.h"
+
+#include "Characters/BaseHero.h"
+#include "Widgets/Widget_HealthBar.h"
 
 UTHAttributeSet::UTHAttributeSet()
 {
@@ -28,6 +32,16 @@ void UTHAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute, f
 {
 	if (Attribute == GetHealthAttribute())
 	{
+		/** HealthBar Change */
+		if (ABaseHero* Hero = Cast<ABaseHero>(GetOwningActor()))
+		{
+			/*if (UMainScreenWidget* MainWidget = Hero->MainWidget)
+			{
+				Hero->MainWidget->SetHPBarPercent(GetHealth(), GetMaxHealth());
+			}*/
+
+			Cast<UWidget_HealthBar>(Hero->HealthBarWidget->GetWidget())->SetHPBarPercent(GetHealth(), GetMaxHealth());
+		}
 	}
 }
 
