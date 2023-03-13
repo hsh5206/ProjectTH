@@ -7,6 +7,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PlayerState.h"
 #include "Blueprint/UserWidget.h"
+#include "Kismet/GameplayStatics.h"
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -18,18 +19,23 @@
 #include "AbilitySystem/THAbilitySystemComponent.h"
 #include "AbilitySystem/THGameplayAbility.h"
 #include "DataAssets/HeroData.h"
+#include "Projectiles/BaseProjectile.h"
+
+#include "DrawDebugHelpers.h"
+
+#define TRACE_LENGTH 8000.f;
 
 ABaseHero::ABaseHero()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
-	SpringArm->SetupAttachment(GetRootComponent());
+	SpringArm->SetupAttachment(GetMesh());
 	SpringArm->TargetArmLength = 180.f;
-	SpringArm->SetRelativeLocation(FVector(0.f, 70.f, 70.f));
 	SpringArm->bEnableCameraLag = true;
 	SpringArm->bEnableCameraRotationLag = true;
 	SpringArm->CameraLagSpeed = 30.f;
+	SpringArm->SocketOffset = FVector(0.f, 70.f, 70.f);
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
@@ -76,6 +82,7 @@ void ABaseHero::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	TraceToCrossHair(CrossHairHitResult);
 }
 
 void ABaseHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -95,7 +102,10 @@ void ABaseHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		if (JumpInputAction)
 		{
 			PlayerEnhancedInputComponent->BindAction(JumpInputAction, ETriggerEvent::Started, this, &ABaseHero::OnJumpAction);
-			PlayerEnhancedInputComponent->BindAction(JumpInputAction, ETriggerEvent::Completed, this, &ABaseHero::OnJumpActionEnd);
+		}
+		if (BasicAttackInputAction)
+		{
+			PlayerEnhancedInputComponent->BindAction(BasicAttackInputAction, ETriggerEvent::Triggered, this, &ABaseHero::OnBasicAttack);
 		}
 	}
 }
@@ -136,11 +146,6 @@ void ABaseHero::OnJumpAction()
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetPlayerState(), Payload.EventTag, Payload);
 }
 
-void ABaseHero::OnJumpActionEnd()
-{
-	// Stop Jumping
-}
-
 void ABaseHero::Landed(const FHitResult& Hit)
 {
 	Super::Landed(Hit);
@@ -150,6 +155,56 @@ void ABaseHero::Landed(const FHitResult& Hit)
 		FGameplayTagContainer Tag;
 		Tag.AddTag(FGameplayTag::RequestGameplayTag(FName("State.Movement.Jump")));
 		AbilitySystemComponent->RemoveActiveEffectsWithTags(Tag);
+	}
+}
+
+void ABaseHero::OnBasicAttack()
+{
+	FGameplayEventData Payload;
+	Payload.Instigator = this;
+	Payload.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Attack.BasicAttack"));
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetPlayerState(), Payload.EventTag, Payload);
+}
+
+void ABaseHero::TraceToCrossHair(FHitResult& TraceHitResult)
+{
+	FVector2D ViewportSize;
+	if (GEngine && GEngine->GameViewport)
+	{
+		GEngine->GameViewport->GetViewportSize(ViewportSize);
+	}
+
+	FVector2D CrossHairLocation(ViewportSize.X / 2.f, ViewportSize.Y / 2.f);
+	FVector CrossHairWorldPosition;
+	FVector CrossHairWorldDirection;
+
+	bool bScreenToWorldSuccessed = UGameplayStatics::DeprojectScreenToWorld(
+		Cast<APlayerController>(GetController()),
+		CrossHairLocation,
+		CrossHairWorldPosition,
+		CrossHairWorldDirection
+	);
+
+	if (bScreenToWorldSuccessed)
+	{
+		FVector Start = CrossHairWorldPosition;
+		FVector End = Start + CrossHairWorldDirection * TRACE_LENGTH;
+
+		GetWorld()->LineTraceSingleByChannel(
+			TraceHitResult,
+			Start,
+			End,
+			ECollisionChannel::ECC_Visibility
+		);
+
+		if (!TraceHitResult.bBlockingHit)
+		{
+			TraceHitResult.ImpactPoint = End;
+		}
+		else
+		{
+			DrawDebugSphere(GetWorld(), TraceHitResult.ImpactPoint, 12.f, 12, FColor::Red);
+		}
 	}
 }
 

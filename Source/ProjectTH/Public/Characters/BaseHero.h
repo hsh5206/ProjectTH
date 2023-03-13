@@ -26,10 +26,11 @@ public:
 	UPROPERTY(EditAnywhere, Category = Camera)
 	class UCameraComponent* Camera;
 
+	virtual class UTHAbilitySystemComponent* GetAbilitySystemComponent();
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void PawnClientRestart() override;
-	virtual class UTHAbilitySystemComponent* GetAbilitySystemComponent();
 
 public:	
 	/** Hero Data */
@@ -45,6 +46,8 @@ public:
 	UInputAction* LookInputAction;
 	UPROPERTY(EditDefaultsOnly)
 	UInputAction* JumpInputAction;
+	UPROPERTY(EditDefaultsOnly)
+	UInputAction* BasicAttackInputAction;
 
 	/** Move */
 	void OnMoveAction(const FInputActionValue& Value);
@@ -52,8 +55,17 @@ public:
 	void OnLookAction(const FInputActionValue& Value);
 	/** Jump */
 	void OnJumpAction();
-	void OnJumpActionEnd();
 	virtual void Landed(const FHitResult& Hit) override;
+	/** Basic Attack */
+	void OnBasicAttack();
+	UPROPERTY(BlueprintReadOnly)
+	FName SectionName = FName("L");
+
+	void TraceToCrossHair(FHitResult& TraceHitResult);
+	
+	/** Projectile */
+	UPROPERTY(BlueprintReadOnly)
+	FHitResult CrossHairHitResult;
 
 public:
 	virtual void InitializeAttributes();
