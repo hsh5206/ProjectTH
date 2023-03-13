@@ -28,7 +28,7 @@ ABaseHero::ABaseHero()
 	SpringArm->SetRelativeLocation(FVector(0.f, 70.f, 70.f));
 	SpringArm->bEnableCameraLag = true;
 	SpringArm->bEnableCameraRotationLag = true;
-	SpringArm->CameraLagSpeed = 5.f;
+	SpringArm->CameraLagSpeed = 30.f;
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
@@ -40,6 +40,7 @@ ABaseHero::ABaseHero()
 
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 0.f, 1000.f);
+	GetCharacterMovement()->MaxWalkSpeed = 500.f;
 }
 
 void ABaseHero::BeginPlay()

@@ -18,4 +18,6 @@ public:
 	virtual void BeginPlay() override;
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class ABaseHero> SelectedHero;
+	UFUNCTION(Server, Reliable)
+	void ServerSpawnPlayer();
 };

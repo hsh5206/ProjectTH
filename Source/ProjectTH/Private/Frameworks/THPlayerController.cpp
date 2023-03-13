@@ -8,6 +8,14 @@
 
 void ATHPlayerController::BeginPlay()
 {
+	if (IsLocalPlayerController())
+	{
+		ServerSpawnPlayer();
+	}
+}
+
+void ATHPlayerController::ServerSpawnPlayer_Implementation()
+{
 	ATHGameMode* GameMode = Cast<ATHGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 	GameMode->SpawnPlayer(this, SelectedHero);
 }
