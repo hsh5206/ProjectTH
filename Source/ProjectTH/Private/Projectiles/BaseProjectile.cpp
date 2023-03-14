@@ -78,10 +78,14 @@ void ABaseProjectile::OnBulletHit(UPrimitiveComponent* HitComponent, AActor* Oth
 		UE_LOG(LogTemp, Warning, TEXT("Decal!"));
 
 		// Decal »ý¼º
-		UGameplayStatics::SpawnDecalAttached(BulletHoleDecal, FVector(30.f, 30.f, 30.f), Hit.Component.Get(), NAME_None, Hit.Location, UKismetMathLibrary::MakeRotFromX(Hit.ImpactNormal),EAttachLocation::KeepWorldPosition);
-
+		MulticastSpawnDecal(Hit);
 	}
 	Destroy();
+}
+
+void ABaseProjectile::MulticastSpawnDecal_Implementation(const FHitResult& Hit)
+{
+	UGameplayStatics::SpawnDecalAttached(BulletHoleDecal, FVector(30.f, 30.f, 30.f), Hit.Component.Get(), NAME_None, Hit.Location, UKismetMathLibrary::MakeRotFromX(Hit.ImpactNormal), EAttachLocation::KeepWorldPosition);
 }
 
 void ABaseProjectile::Destroyed()

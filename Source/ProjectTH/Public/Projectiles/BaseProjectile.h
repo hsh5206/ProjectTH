@@ -27,6 +27,8 @@ public:
 
 	UPROPERTY(EditDefaultsOnly)
 	class UMaterialInterface* BulletHoleDecal;
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastSpawnDecal(const FHitResult& Hit);
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf <class UGameplayEffect> HitEffectToTarget;

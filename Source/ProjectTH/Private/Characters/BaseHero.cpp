@@ -8,7 +8,10 @@
 #include "GameFramework/PlayerState.h"
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Components/WidgetComponent.h"
+#include "Net/UnrealNetwork.h"
+#include "Components/ProgressBar.h"
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -23,6 +26,8 @@
 #include "Projectiles/BaseProjectile.h"
 #include "Widgets/Widget_HealthBar.h"
 #include "AbilitySystem/THAttributeSet.h"
+#include "Frameworks/THPlayerController.h"
+#include "Frameworks/THGameMode.h"
 
 #include "DrawDebugHelpers.h"
 
@@ -59,6 +64,55 @@ ABaseHero::ABaseHero()
 	HealthBarWidget->SetupAttachment(GetRootComponent());
 }
 
+void ABaseHero::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	if (HealthBarWidget->GetWidget())
+	{
+		if (ATHPlayerState* THPS = Cast<ATHPlayerState>(GetPlayerState()))
+		{
+			Cast<UWidget_HealthBar>(HealthBarWidget->GetWidget())->SetHPBarPercent(THPS->GetAttributeSet()->GetHealth(), THPS->GetAttributeSet()->GetMaxHealth());
+			ServerSetHPBarPercent(THPS->GetAttributeSet()->GetHealth(), THPS->GetAttributeSet()->GetMaxHealth());
+		}
+	}
+
+	if (HeroData && HeroData->CrossHairClass)
+	{
+		CrossHair = CreateWidget(GetWorld(), HeroData->CrossHairClass);
+		CrossHair->AddToViewport();
+	}
+
+	// AbilitySystem狼 owner客 avatar技泼
+	GetAbilitySystemComponent()->InitAbilityActorInfo(GetPlayerState(), this);
+
+	InitializeAttributes();
+	GiveAbilities();
+}
+
+void ABaseHero::OnRep_PlayerState()
+{
+	Super::OnRep_PlayerState();
+
+	if (HealthBarWidget->GetWidget())
+	{
+		if (ATHPlayerState* THPS = Cast<ATHPlayerState>(GetPlayerState()))
+		{
+			Cast<UWidget_HealthBar>(HealthBarWidget->GetWidget())->SetHPBarPercent(THPS->GetAttributeSet()->GetHealth(), THPS->GetAttributeSet()->GetMaxHealth());
+			ServerSetHPBarPercent(THPS->GetAttributeSet()->GetHealth(), THPS->GetAttributeSet()->GetMaxHealth());
+		}
+	}
+
+	if (HeroData && HeroData->CrossHairClass)
+	{
+		CrossHair = CreateWidget(GetWorld(), HeroData->CrossHairClass);
+		CrossHair->AddToViewport();
+	}
+
+	GetAbilitySystemComponent()->InitAbilityActorInfo(GetPlayerState(), this);
+	InitializeAttributes();
+}
+
 void ABaseHero::BeginPlay()
 {
 	Super::BeginPlay();
@@ -68,6 +122,7 @@ void ABaseHero::BeginPlay()
 		if (ATHPlayerState* THPS = Cast<ATHPlayerState>(GetPlayerState()))
 		{
 			Cast<UWidget_HealthBar>(HealthBarWidget->GetWidget())->SetHPBarPercent(THPS->GetAttributeSet()->GetHealth(), THPS->GetAttributeSet()->GetMaxHealth());
+			ServerSetHPBarPercent(THPS->GetAttributeSet()->GetHealth(), THPS->GetAttributeSet()->GetMaxHealth());
 		}
 	}
 }
@@ -86,6 +141,13 @@ void ABaseHero::PawnClientRestart()
 	}
 }
 
+void ABaseHero::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	//DOREPLIFETIME_CONDITION(ABaseHero, SectionName, COND_OwnerOnly);
+}
+
 UTHAbilitySystemComponent* ABaseHero::GetAbilitySystemComponent()
 {
 	return Cast<UTHAbilitySystemComponent>(Cast<ATHPlayerState>(GetPlayerState())->GetAbilitySystemComponent());
@@ -94,8 +156,19 @@ UTHAbilitySystemComponent* ABaseHero::GetAbilitySystemComponent()
 void ABaseHero::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
+}
 
-	TraceToCrossHair(CrossHairHitResult);
+void ABaseHero::ServerSetHeroData_Implementation(const UHeroData* NewHeroData)
+{
+	HeroData->AnimData = NewHeroData->AnimData;
+	HeroData->CrossHairClass = NewHeroData->CrossHairClass;
+	HeroData->HeroASData = NewHeroData->HeroASData;
+}
+
+void ABaseHero::SetHeroData()
+{
+	ServerSetHeroData(HeroData);
 }
 
 void ABaseHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -173,13 +246,28 @@ void ABaseHero::Landed(const FHitResult& Hit)
 
 void ABaseHero::OnBasicAttack()
 {
-	FGameplayEventData Payload;
-	Payload.Instigator = this;
-	Payload.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Attack.BasicAttack"));
-	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetPlayerState(), Payload.EventTag, Payload);
+	TraceToCrossHair();
+
+	if (IsLocallyControlled())
+	{
+		FGameplayEventData Payload;
+		Payload.Instigator = this;
+		Payload.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Attack.BasicAttack"));
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetPlayerState(), Payload.EventTag, Payload);
+	}
 }
 
-void ABaseHero::TraceToCrossHair(FHitResult& TraceHitResult)
+void ABaseHero::ServerChangeSectionName_Implementation()
+{
+	MulticastChangeSectionName();
+}
+
+void ABaseHero::MulticastChangeSectionName_Implementation()
+{
+	SectionName = SectionName == FName("L") ? FName("R") : FName("L");
+}
+
+void ABaseHero::TraceToCrossHair()
 {
 	FVector2D ViewportSize;
 	if (GEngine && GEngine->GameViewport)
@@ -203,24 +291,49 @@ void ABaseHero::TraceToCrossHair(FHitResult& TraceHitResult)
 		FVector Start = CrossHairWorldPosition;
 		FVector End = Start + CrossHairWorldDirection * TRACE_LENGTH;
 
+		FHitResult HitReslut;
 		GetWorld()->LineTraceSingleByChannel(
-			TraceHitResult,
+			HitReslut,
 			Start,
 			End,
 			ECollisionChannel::ECC_Visibility
 		);
 
-		if (!TraceHitResult.bBlockingHit)
+		if (!HitReslut.bBlockingHit)
 		{
-			TraceHitResult.ImpactPoint = End;
+			HitReslut.ImpactPoint = End;
 		}
 		else
 		{
-			DrawDebugSphere(GetWorld(), TraceHitResult.ImpactPoint, 12.f, 12, FColor::Red);
+			//DrawDebugSphere(GetWorld(), TraceHitResult.ImpactPoint, 12.f, 12, FColor::Red);
 		}
+
+		ServerSetCrossHairHitLocation(HitReslut);
 	}
 }
 
+void ABaseHero::ServerSetCrossHairHitLocation_Implementation(const FHitResult& TraceHitResult)
+{
+	MulticastSetCrossHairHitLocation(TraceHitResult);
+}
+
+void ABaseHero::MulticastSetCrossHairHitLocation_Implementation(const FHitResult& TraceHitResult)
+{
+	CrossHairHitLocation = TraceHitResult.ImpactPoint;
+}
+
+void ABaseHero::ServerSetHPBarPercent_Implementation(const float& CurrentHP, const float& MaxHP)
+{
+	MulticastSetHPBarPercent(CurrentHP, MaxHP);
+}
+
+void ABaseHero::MulticastSetHPBarPercent_Implementation(const float& CurrentHP, const float& MaxHP)
+{
+	Cast<UWidget_HealthBar>(HealthBarWidget->GetWidget())->SetHPBarPercent(CurrentHP, MaxHP);
+	UE_LOG(LogTemp, Warning, TEXT("SetHealthBar on Multi"));
+}
+
+/** AbilitySystem */
 void ABaseHero::InitializeAttributes()
 {
 	UTHAbilitySystemComponent* AbilitySystemComponent = GetAbilitySystemComponent();
@@ -252,23 +365,4 @@ void ABaseHero::GiveAbilities()
 			AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(StartupAbility));
 		}
 	}
-}
-
-void ABaseHero::PossessedBy(AController* NewController)
-{
-	Super::PossessedBy(NewController);
-
-	// AbilitySystem狼 owner客 avatar技泼
-	GetAbilitySystemComponent()->InitAbilityActorInfo(GetPlayerState(), this);
-
-	InitializeAttributes();
-	GiveAbilities();
-}
-
-void ABaseHero::OnRep_PlayerState()
-{
-	Super::OnRep_PlayerState();
-
-	GetAbilitySystemComponent()->InitAbilityActorInfo(GetPlayerState(), this);
-	InitializeAttributes();
 }

@@ -19,7 +19,10 @@ class PROJECTTH_API ABaseHero : public ACharacter
 public:
 	ABaseHero();
 	virtual void Tick(float DeltaTime) override;
+	virtual void PossessedBy(AController* NewController) override;
+	virtual void OnRep_PlayerState() override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	UPROPERTY(EditAnywhere, Category = Camera)
 	class USpringArmComponent* SpringArm;
@@ -36,6 +39,9 @@ public:
 	/** Hero Data */
 	UPROPERTY(EditDefaultsOnly)
 	class UHeroData* HeroData;
+	UFUNCTION(Server, Reliable)
+	void ServerSetHeroData(const UHeroData* NewHeroData);
+	void SetHeroData();
 
 	/** Enhanced Input */
 	UPROPERTY(EditDefaultsOnly)
@@ -60,20 +66,30 @@ public:
 	void OnBasicAttack();
 	UPROPERTY(BlueprintReadOnly)
 	FName SectionName = FName("L");
+	UFUNCTION(BlueprintCallable, Server, Reliable)
+	void ServerChangeSectionName();
+	UFUNCTION(BlueprintCallable, NetMulticast, Reliable)
+	void MulticastChangeSectionName();
 
-	void TraceToCrossHair(FHitResult& TraceHitResult);
+	class UUserWidget* CrossHair;
+	void TraceToCrossHair();
 	
 	/** Projectile */
 	UPROPERTY(BlueprintReadOnly)
-	FHitResult CrossHairHitResult;
-
+	FVector CrossHairHitLocation;
+	UFUNCTION(Server, Reliable)
+	void ServerSetCrossHairHitLocation(const FHitResult& CrossHairHitResult);
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastSetCrossHairHitLocation(const FHitResult& CrossHairHitResult);
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UWidgetComponent* HealthBarWidget;
+	UFUNCTION(Server, Reliable)
+	void ServerSetHPBarPercent(const float& CurrentHP, const float& MaxHP);
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastSetHPBarPercent(const float& CurrentHP, const float& MaxHP);
 
 public:
 	virtual void InitializeAttributes();
 	virtual void GiveAbilities();
-	virtual void PossessedBy(AController* NewController) override;
-	virtual void OnRep_PlayerState() override;
 };

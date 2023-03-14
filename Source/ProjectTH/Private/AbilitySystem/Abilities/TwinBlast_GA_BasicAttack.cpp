@@ -54,11 +54,3 @@ void UTwinBlast_GA_BasicAttack::FireR(const FVector& HitTarget)
 		}
 	}
 }
-
-void UTwinBlast_GA_BasicAttack::ChangeSectionName()
-{
-	if (ABaseHero* Hero = Cast<ABaseHero>(GetActorInfo().AvatarActor))
-	{
-		Hero->SectionName = Hero->SectionName == FName("L") ? FName("R") : FName("L");
-	}
-}

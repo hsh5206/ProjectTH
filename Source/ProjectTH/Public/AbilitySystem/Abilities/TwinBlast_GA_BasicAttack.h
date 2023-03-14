@@ -21,6 +21,4 @@ public:
 	void FireL(const FVector& HitTarget);
 	UFUNCTION(BlueprintCallable)
 	void FireR(const FVector& HitTarget);
-	UFUNCTION(BlueprintCallable)
-	void ChangeSectionName();
 };

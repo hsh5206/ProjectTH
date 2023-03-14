@@ -7,6 +7,7 @@
 
 #include "Characters/BaseHero.h"
 #include "Widgets/Widget_HealthBar.h"
+#include "Frameworks/THPlayerState.h"
 
 UTHAttributeSet::UTHAttributeSet()
 {
@@ -33,16 +34,19 @@ void UTHAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute, f
 	if (Attribute == GetHealthAttribute())
 	{
 		/** HealthBar Change */
-		if (ABaseHero* Hero = Cast<ABaseHero>(GetOwningActor()))
+		if (ABaseHero* Hero = Cast<ABaseHero>(Cast<ATHPlayerState>(GetOwningActor())->GetPawn()))
 		{
 			/*if (UMainScreenWidget* MainWidget = Hero->MainWidget)
 			{
 				Hero->MainWidget->SetHPBarPercent(GetHealth(), GetMaxHealth());
 			}*/
 
-			Cast<UWidget_HealthBar>(Hero->HealthBarWidget->GetWidget())->SetHPBarPercent(GetHealth(), GetMaxHealth());
+			UE_LOG(LogTemp, Warning, TEXT("SetHealthBar : %f / %f = %f"), GetHealth(), GetMaxHealth(), GetHealth() / GetMaxHealth());
+			Hero->ServerSetHPBarPercent(GetHealth(), GetMaxHealth());
 		}
 	}
+
+	Super::PostAttributeChange(Attribute, OldValue, NewValue);
 }
 
 void UTHAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth)

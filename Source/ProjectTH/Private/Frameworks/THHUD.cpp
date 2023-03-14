@@ -17,12 +17,17 @@ void ATHHUD::BeginPlay()
 		BaseUI->AddToViewport();
 	}
 
-	if (ABaseHero* Hero = Cast<ABaseHero>(GetOwningPawn()))
+	/*if (ABaseHero* Hero = Cast<ABaseHero>(GetOwningPawn()))
 	{
-		if (Hero->HeroData && Hero->HeroData->CrossHairClass)
+		if (Hero->IsLocallyControlled())
 		{
-			CrossHair = CreateWidget(GetOwningPlayerController(), Hero->HeroData->CrossHairClass);
-			CrossHair->AddToViewport();
+			UE_LOG(LogTemp, Warning, TEXT("CrossHair To ViewPowrt"));
+			if (Hero->HeroData && Hero->HeroData->CrossHairClass)
+			{
+				
+				CrossHair = CreateWidget(GetOwningPlayerController(), Hero->HeroData->CrossHairClass);
+				CrossHair->AddToViewport();
+			}
 		}
-	}
+	}*/
 }

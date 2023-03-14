@@ -17,5 +17,6 @@ class PROJECTTH_API UWidget_HealthBar : public UUserWidget
 public:
 	UPROPERTY(meta = (BindWidget))
 	class UProgressBar* HealthBar;
+	UFUNCTION()
 	void SetHPBarPercent(float CurrentHP, float MaxHP);
 };

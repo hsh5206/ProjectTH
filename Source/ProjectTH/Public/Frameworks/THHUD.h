@@ -18,7 +18,6 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UWidget_BaseUI> BaseUIClass;
 	UWidget_BaseUI* BaseUI;
-	class UUserWidget* CrossHair;
 
 protected:
 	virtual void BeginPlay() override;
