@@ -60,26 +60,29 @@ void ABaseProjectile::Tick(float DeltaTime)
 
 void ABaseProjectile::OnBulletHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-
-	if (ABaseHero* Hero = Cast<ABaseHero>(OtherActor))
+	if (ABaseHero* OwnerHero = Cast<ABaseHero>(GetOwner()))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Hit!"));
-
-		FGameplayEffectContextHandle EffectContext = Hero->GetAbilitySystemComponent()->MakeEffectContext();
-
-		FGameplayEffectSpecHandle SpecHandle = Hero->GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffectToTarget, 1, EffectContext);
-		if (SpecHandle.IsValid())
+		if (ABaseHero* TargetHero = Cast<ABaseHero>(OtherActor))
 		{
-			FActiveGameplayEffectHandle ActiveGEHandle = Hero->GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+			UE_LOG(LogTemp, Warning, TEXT("Hit!"));
+
+				FGameplayEffectContextHandle EffectContext = OwnerHero->GetAbilitySystemComponent()->MakeEffectContext();
+				EffectContext.AddHitResult(Hit);
+				FGameplayEffectSpecHandle SpecHandle = OwnerHero->GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffectToTarget, 1, EffectContext);
+				if (SpecHandle.IsValid())
+				{
+					FActiveGameplayEffectHandle ActiveGEHandle = OwnerHero->GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), TargetHero->GetAbilitySystemComponent());
+				}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Decal!"));
+
+			// Decal 持失
+			MulticastSpawnDecal(Hit);
 		}
 	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Decal!"));
-
-		// Decal 持失
-		MulticastSpawnDecal(Hit);
-	}
+	
 	Destroy();
 }
 

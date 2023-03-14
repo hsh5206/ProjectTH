@@ -28,6 +28,7 @@
 #include "AbilitySystem/THAttributeSet.h"
 #include "Frameworks/THPlayerController.h"
 #include "Frameworks/THGameMode.h"
+#include "Frameworks/THHUD.h"
 
 #include "DrawDebugHelpers.h"
 
@@ -64,6 +65,7 @@ ABaseHero::ABaseHero()
 	HealthBarWidget->SetupAttachment(GetRootComponent());
 }
 
+// Server
 void ABaseHero::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
@@ -90,6 +92,7 @@ void ABaseHero::PossessedBy(AController* NewController)
 	GiveAbilities();
 }
 
+// Client
 void ABaseHero::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
@@ -117,7 +120,7 @@ void ABaseHero::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (HealthBarWidget->GetWidget())
+	if (!HasAuthority() && HealthBarWidget->GetWidget())
 	{
 		if (ATHPlayerState* THPS = Cast<ATHPlayerState>(GetPlayerState()))
 		{
@@ -193,6 +196,10 @@ void ABaseHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		{
 			PlayerEnhancedInputComponent->BindAction(BasicAttackInputAction, ETriggerEvent::Triggered, this, &ABaseHero::OnBasicAttack);
 		}
+		if (ReloadInputAction)
+		{
+			PlayerEnhancedInputComponent->BindAction(ReloadInputAction, ETriggerEvent::Started, this, &ABaseHero::OnReload);
+		}
 	}
 }
 
@@ -267,6 +274,17 @@ void ABaseHero::MulticastChangeSectionName_Implementation()
 	SectionName = SectionName == FName("L") ? FName("R") : FName("L");
 }
 
+void ABaseHero::OnReload()
+{
+	if (IsLocallyControlled())
+	{
+		FGameplayEventData Payload;
+		Payload.Instigator = this;
+		Payload.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Movement.Reload"));
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetPlayerState(), Payload.EventTag, Payload);
+	}
+}
+
 void ABaseHero::TraceToCrossHair()
 {
 	FVector2D ViewportSize;
@@ -330,7 +348,6 @@ void ABaseHero::ServerSetHPBarPercent_Implementation(const float& CurrentHP, con
 void ABaseHero::MulticastSetHPBarPercent_Implementation(const float& CurrentHP, const float& MaxHP)
 {
 	Cast<UWidget_HealthBar>(HealthBarWidget->GetWidget())->SetHPBarPercent(CurrentHP, MaxHP);
-	UE_LOG(LogTemp, Warning, TEXT("SetHealthBar on Multi"));
 }
 
 /** AbilitySystem */

@@ -54,6 +54,8 @@ public:
 	UInputAction* JumpInputAction;
 	UPROPERTY(EditDefaultsOnly)
 	UInputAction* BasicAttackInputAction;
+	UPROPERTY(EditDefaultsOnly)
+	UInputAction* ReloadInputAction;
 
 	/** Move */
 	void OnMoveAction(const FInputActionValue& Value);
@@ -70,6 +72,8 @@ public:
 	void ServerChangeSectionName();
 	UFUNCTION(BlueprintCallable, NetMulticast, Reliable)
 	void MulticastChangeSectionName();
+	/** Reload */
+	void OnReload();
 
 	class UUserWidget* CrossHair;
 	void TraceToCrossHair();

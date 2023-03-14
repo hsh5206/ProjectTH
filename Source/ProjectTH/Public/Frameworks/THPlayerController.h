@@ -15,9 +15,15 @@ class PROJECTTH_API ATHPlayerController : public APlayerController
 	GENERATED_BODY()
 	
 public:
-	virtual void BeginPlay() override;
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class ABaseHero> SelectedHero;
 	UFUNCTION(Server, Reliable)
 	void ServerSpawnPlayer();
+
+protected:
+	virtual void BeginPlay() override;
+	virtual void OnPossess(APawn* aPawn) override;
+
+private:
+	class ATHHUD* THHUD;
 };

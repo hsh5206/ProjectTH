@@ -6,8 +6,6 @@
 #include "Components/WidgetComponent.h"
 
 #include "Characters/BaseHero.h"
-#include "Widgets/Widget_HealthBar.h"
-#include "Frameworks/THPlayerState.h"
 
 UTHAttributeSet::UTHAttributeSet()
 {
@@ -17,6 +15,8 @@ void UTHAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 {
 	DOREPLIFETIME_CONDITION_NOTIFY(UTHAttributeSet, Health, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UTHAttributeSet, MaxHealth, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UTHAttributeSet, BulletNum, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UTHAttributeSet, MaxBulletNum, COND_None, REPNOTIFY_Always);
 }
 
 void UTHAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
@@ -27,26 +27,10 @@ void UTHAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, fl
 	{
 		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxHealth());
 	}
-}
-
-void UTHAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue)
-{
-	if (Attribute == GetHealthAttribute())
+	if (Attribute == GetBulletNumAttribute())
 	{
-		/** HealthBar Change */
-		if (ABaseHero* Hero = Cast<ABaseHero>(Cast<ATHPlayerState>(GetOwningActor())->GetPawn()))
-		{
-			/*if (UMainScreenWidget* MainWidget = Hero->MainWidget)
-			{
-				Hero->MainWidget->SetHPBarPercent(GetHealth(), GetMaxHealth());
-			}*/
-
-			UE_LOG(LogTemp, Warning, TEXT("SetHealthBar : %f / %f = %f"), GetHealth(), GetMaxHealth(), GetHealth() / GetMaxHealth());
-			Hero->ServerSetHPBarPercent(GetHealth(), GetMaxHealth());
-		}
+		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxBulletNum());
 	}
-
-	Super::PostAttributeChange(Attribute, OldValue, NewValue);
 }
 
 void UTHAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth)
@@ -57,4 +41,14 @@ void UTHAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth)
 void UTHAttributeSet::OnRep_MaxHealth(const FGameplayAttributeData& OldMaxHealth)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UTHAttributeSet, MaxHealth, OldMaxHealth);
+}
+
+void UTHAttributeSet::OnRep_BulletNum(const FGameplayAttributeData& OldBulletNum)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UTHAttributeSet, BulletNum, OldBulletNum);
+}
+
+void UTHAttributeSet::OnRep_MaxBulletNum(const FGameplayAttributeData& OldMaxBulletNum)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UTHAttributeSet, MaxBulletNum, OldMaxBulletNum);
 }

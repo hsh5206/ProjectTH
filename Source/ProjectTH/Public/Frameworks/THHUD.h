@@ -6,9 +6,6 @@
 #include "GameFramework/HUD.h"
 #include "THHUD.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class PROJECTTH_API ATHHUD : public AHUD
 {
@@ -18,6 +15,14 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UWidget_BaseUI> BaseUIClass;
 	UWidget_BaseUI* BaseUI;
+
+	UFUNCTION()
+	void DefaultBaseUISettingWhenSpawned();
+
+	void SetHUDHealth(float Health);
+	void SetHUDMaxHealth(float MaxHealth);
+	void SetHUDBulletNum(float BN);
+	void SetHUDMaxBulletNum(float MaxBN);
 
 protected:
 	virtual void BeginPlay() override;

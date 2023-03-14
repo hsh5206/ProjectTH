@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerState.h"
 #include "AbilitySystemInterface.h"
+#include "GameplayEffectTypes.h"
 #include "THPlayerState.generated.h"
 
 /**
@@ -21,9 +22,21 @@ public:
 	class UTHAttributeSet* GetAttributeSet() const;
 
 protected:
+	virtual void BeginPlay() override;
+
 	UPROPERTY()
 	class UTHAbilitySystemComponent* AbilitySystemComponent;
 
 	UPROPERTY()
 	class UTHAttributeSet* AttributeSet;
+
+public:
+	virtual void OnMaxHealthChanged(const FOnAttributeChangeData& Data);
+	virtual void OnHealthChanged(const FOnAttributeChangeData& Data);
+	virtual void OnMaxBulletNumChanged(const FOnAttributeChangeData& Data);
+	virtual void OnBulletNumChanged(const FOnAttributeChangeData& Data);
+
+private:
+	class ATHPlayerController* OwningTHController;
+	class ATHHUD* OwningTHHUD;
 };

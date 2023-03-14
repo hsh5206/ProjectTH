@@ -23,7 +23,6 @@ public:
 	UTHAttributeSet();
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
-	virtual void PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue);
 
 	/** Attributes */
 	UPROPERTY(BlueprintReadOnly, Category = "Attributes", ReplicatedUsing = OnRep_Health)
@@ -34,9 +33,21 @@ public:
 	FGameplayAttributeData MaxHealth;
 	ATTRIBUTE_ACCESSORS(UTHAttributeSet, MaxHealth)
 
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes", ReplicatedUsing = OnRep_BulletNum)
+	FGameplayAttributeData BulletNum;
+	ATTRIBUTE_ACCESSORS(UTHAttributeSet, BulletNum)
+
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes", ReplicatedUsing = OnRep_MaxBulletNum)
+	FGameplayAttributeData MaxBulletNum;
+	ATTRIBUTE_ACCESSORS(UTHAttributeSet, MaxBulletNum)
+
 protected:
 	UFUNCTION()
 	virtual void OnRep_Health(const FGameplayAttributeData& OldHealth);
 	UFUNCTION()
 	virtual void OnRep_MaxHealth(const FGameplayAttributeData& OldMaxHealth);
+	UFUNCTION()
+	virtual void OnRep_BulletNum(const FGameplayAttributeData& OldBulletNum);
+	UFUNCTION()
+	virtual void OnRep_MaxBulletNum(const FGameplayAttributeData& OldMaxBulletNum);
 };
