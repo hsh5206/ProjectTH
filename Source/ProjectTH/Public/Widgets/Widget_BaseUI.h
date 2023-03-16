@@ -55,11 +55,11 @@ public:
 	class UTextBlock* UltimateGaugeText;
 	UPROPERTY(meta = (BindWidget))
 	class UProgressBar* UltimateGaugeBar;
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UImage* ShiftSkillImage;
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UImage* ESkillImage;
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UImage* RMSkillImage;
 
 	UFUNCTION()
