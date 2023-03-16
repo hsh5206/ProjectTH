@@ -90,3 +90,12 @@ void ATHHUD::SetHUDMaxBulletNum(float MaxBN)
 		BaseUI->SetMaxBulletNumText(MaxBN);
 	}
 }
+
+void ATHHUD::SetHUDUltimateGauge(float UG)
+{
+	if (BaseUI && BaseUI->UltimateGaugeBar && BaseUI->UltimateGaugeText)
+	{
+		BaseUI->SetUltimateGaugeBarPercent(UG);
+		BaseUI->SetUltimateGaugeText(UG);
+	}
+}

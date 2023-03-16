@@ -23,6 +23,7 @@ public:
 	void SetHUDMaxHealth(float MaxHealth);
 	void SetHUDBulletNum(float BN);
 	void SetHUDMaxBulletNum(float MaxBN);
+	void SetHUDUltimateGauge(float UG);
 
 protected:
 	virtual void BeginPlay() override;

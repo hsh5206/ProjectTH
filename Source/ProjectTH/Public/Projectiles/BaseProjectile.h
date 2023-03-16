@@ -32,6 +32,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf <class UGameplayEffect> HitEffectToTarget;
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf <class UGameplayEffect> HitEffectToSelf;
+
 protected:
 	virtual void BeginPlay() override;
 

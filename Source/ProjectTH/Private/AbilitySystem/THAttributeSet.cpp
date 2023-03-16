@@ -17,6 +17,8 @@ void UTHAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 	DOREPLIFETIME_CONDITION_NOTIFY(UTHAttributeSet, MaxHealth, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UTHAttributeSet, BulletNum, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UTHAttributeSet, MaxBulletNum, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UTHAttributeSet, UltimateGauge, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UTHAttributeSet, MaxUltimateGauge, COND_None, REPNOTIFY_Always);
 }
 
 void UTHAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
@@ -30,6 +32,10 @@ void UTHAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, fl
 	if (Attribute == GetBulletNumAttribute())
 	{
 		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxBulletNum());
+	}
+	if (Attribute == GetUltimateGaugeAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxUltimateGauge());
 	}
 }
 
@@ -51,4 +57,14 @@ void UTHAttributeSet::OnRep_BulletNum(const FGameplayAttributeData& OldBulletNum
 void UTHAttributeSet::OnRep_MaxBulletNum(const FGameplayAttributeData& OldMaxBulletNum)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UTHAttributeSet, MaxBulletNum, OldMaxBulletNum);
+}
+
+void UTHAttributeSet::OnRep_UltimateGauge(const FGameplayAttributeData& OldUltimateGauge)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UTHAttributeSet, UltimateGauge, OldUltimateGauge);
+}
+
+void UTHAttributeSet::OnRep_MaxUltimateGauge(const FGameplayAttributeData& OldMaxUltimateGauge)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UTHAttributeSet, MaxUltimateGauge, OldMaxUltimateGauge);
 }

@@ -30,6 +30,11 @@ float UWidget_BaseUI::GetMaxBulletNumText()
 	return FCString::Atof(*MaxBulletNum->GetText().ToString());
 }
 
+float UWidget_BaseUI::GetUltimateGauge()
+{
+	return FCString::Atof(*UltimateGaugeText->GetText().ToString());
+}
+
 void UWidget_BaseUI::SetHealthBarPercent(float CurrentHP, float MaxHP)
 {
 	HealthBar->SetPercent(CurrentHP / MaxHP);
@@ -53,4 +58,14 @@ void UWidget_BaseUI::SetBulletNumText(float BN)
 void UWidget_BaseUI::SetMaxBulletNumText(float MBN)
 {
 	MaxBulletNum->SetText(FText::FromString(FString::Printf(TEXT("%d"), int32(MBN))));
+}
+
+void UWidget_BaseUI::SetUltimateGaugeBarPercent(float CrrentGauge)
+{
+	UltimateGaugeBar->SetPercent(CrrentGauge / 100.f);
+}
+
+void UWidget_BaseUI::SetUltimateGaugeText(float GaugePercent)
+{
+	UltimateGaugeText->SetText(FText::FromString(FString::Printf(TEXT("%d"), int32(GaugePercent))));
 }

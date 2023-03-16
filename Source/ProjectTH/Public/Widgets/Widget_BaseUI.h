@@ -25,6 +25,10 @@ public:
 	class UTextBlock* BulletNum;
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* MaxBulletNum;
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* UltimateGaugeText;
+	UPROPERTY(meta = (BindWidget))
+	class UProgressBar* UltimateGaugeBar;
 
 	UFUNCTION()
 	float GetHealthBarPercent();
@@ -36,6 +40,8 @@ public:
 	float GetBulletNumText();
 	UFUNCTION()
 	float GetMaxBulletNumText();
+	UFUNCTION()
+	float GetUltimateGauge();
 
 	UFUNCTION()
 	void SetHealthBarPercent(float CurrentHP, float MaxHP);
@@ -47,4 +53,8 @@ public:
 	void SetBulletNumText(float MaxHP);
 	UFUNCTION()
 	void SetMaxBulletNumText(float MaxHP);
+	UFUNCTION()
+	void SetUltimateGaugeBarPercent(float CrrentGauge);
+	UFUNCTION()
+	void SetUltimateGaugeText(float GaugePercent);
 };

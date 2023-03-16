@@ -41,6 +41,14 @@ public:
 	FGameplayAttributeData MaxBulletNum;
 	ATTRIBUTE_ACCESSORS(UTHAttributeSet, MaxBulletNum)
 
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes", ReplicatedUsing = OnRep_UltimateGauge)
+	FGameplayAttributeData UltimateGauge;
+	ATTRIBUTE_ACCESSORS(UTHAttributeSet, UltimateGauge)
+
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes", ReplicatedUsing = OnRep_MaxUltimateGauge)
+	FGameplayAttributeData MaxUltimateGauge;
+	ATTRIBUTE_ACCESSORS(UTHAttributeSet, MaxUltimateGauge)
+
 protected:
 	UFUNCTION()
 	virtual void OnRep_Health(const FGameplayAttributeData& OldHealth);
@@ -50,4 +58,8 @@ protected:
 	virtual void OnRep_BulletNum(const FGameplayAttributeData& OldBulletNum);
 	UFUNCTION()
 	virtual void OnRep_MaxBulletNum(const FGameplayAttributeData& OldMaxBulletNum);
+	UFUNCTION()
+	virtual void OnRep_UltimateGauge(const FGameplayAttributeData& OldUltimateGauge);
+	UFUNCTION()
+	virtual void OnRep_MaxUltimateGauge(const FGameplayAttributeData& OldMaxUltimateGauge);
 };

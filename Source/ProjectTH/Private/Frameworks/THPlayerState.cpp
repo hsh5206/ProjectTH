@@ -44,6 +44,7 @@ void ATHPlayerState::BeginPlay()
 	GetAbilitySystemComponent()->GetGameplayAttributeValueChangeDelegate(GetAttributeSet()->GetHealthAttribute()).AddUObject(this, &ATHPlayerState::OnHealthChanged);
 	GetAbilitySystemComponent()->GetGameplayAttributeValueChangeDelegate(GetAttributeSet()->GetMaxBulletNumAttribute()).AddUObject(this, &ATHPlayerState::OnMaxBulletNumChanged);
 	GetAbilitySystemComponent()->GetGameplayAttributeValueChangeDelegate(GetAttributeSet()->GetBulletNumAttribute()).AddUObject(this, &ATHPlayerState::OnBulletNumChanged);
+	GetAbilitySystemComponent()->GetGameplayAttributeValueChangeDelegate(GetAttributeSet()->GetUltimateGaugeAttribute()).AddUObject(this, &ATHPlayerState::OnUltimateGaugeChanged);
 }
 
 void ATHPlayerState::OnMaxHealthChanged(const FOnAttributeChangeData& Data)
@@ -75,5 +76,13 @@ void ATHPlayerState::OnBulletNumChanged(const FOnAttributeChangeData& Data)
 	if (OwningTHHUD)
 	{
 		OwningTHHUD->SetHUDBulletNum(Data.NewValue);
+	}
+}
+
+void ATHPlayerState::OnUltimateGaugeChanged(const FOnAttributeChangeData& Data)
+{
+	if (OwningTHHUD)
+	{
+		OwningTHHUD->SetHUDUltimateGauge(Data.NewValue);
 	}
 }

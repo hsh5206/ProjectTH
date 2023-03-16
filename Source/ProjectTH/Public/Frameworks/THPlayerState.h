@@ -35,6 +35,7 @@ public:
 	virtual void OnHealthChanged(const FOnAttributeChangeData& Data);
 	virtual void OnMaxBulletNumChanged(const FOnAttributeChangeData& Data);
 	virtual void OnBulletNumChanged(const FOnAttributeChangeData& Data);
+	virtual void OnUltimateGaugeChanged(const FOnAttributeChangeData& Data);
 
 private:
 	class ATHPlayerController* OwningTHController;
