@@ -56,6 +56,10 @@ public:
 	UInputAction* BasicAttackInputAction;
 	UPROPERTY(EditDefaultsOnly)
 	UInputAction* ReloadInputAction;
+	//UPROPERTY(EditDefaultsOnly)
+	//UInputAction* UseAbilityInputAction;
+	//UPROPERTY(EditDefaultsOnly)
+	//UInputAction* CancelAbilityInputAction;
 
 	/** Move */
 	void OnMoveAction(const FInputActionValue& Value);
@@ -65,6 +69,8 @@ public:
 	void OnJumpAction();
 	virtual void Landed(const FHitResult& Hit) override;
 	/** Basic Attack */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bCanBaseAttack = true;
 	void OnBasicAttack();
 	UPROPERTY(BlueprintReadOnly)
 	FName SectionName = FName("L");
@@ -76,6 +82,7 @@ public:
 	void OnReload();
 
 	class UUserWidget* CrossHair;
+	UFUNCTION(BlueprintCallable)
 	void TraceToCrossHair();
 	
 	/** Projectile */

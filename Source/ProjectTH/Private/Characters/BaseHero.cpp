@@ -29,6 +29,7 @@
 #include "Frameworks/THPlayerController.h"
 #include "Frameworks/THGameMode.h"
 #include "Frameworks/THHUD.h"
+#include "../ProjectTH.h"
 
 #include "DrawDebugHelpers.h"
 
@@ -114,6 +115,20 @@ void ABaseHero::OnRep_PlayerState()
 
 	GetAbilitySystemComponent()->InitAbilityActorInfo(GetPlayerState(), this);
 	InitializeAttributes();
+
+	/*if (UAbilitySystemComponent* ASC = Cast<ATHPlayerState>(GetPlayerState())->GetAbilitySystemComponent())
+	{
+		ASC->BindAbilityActivationToInputComponent(
+			InputComponent,
+			FGameplayAbilityInputBinds(
+				FString("ConfirmTarget"),
+				FString("CancelTarget"),
+				FString("ETHAbilityInputID"),
+				static_cast<int32>(ETHAbilityInputID::Confirm),
+				static_cast<int32>(ETHAbilityInputID::Cancel)
+			)
+		);
+	}*/
 }
 
 void ABaseHero::BeginPlay()
@@ -200,6 +215,28 @@ void ABaseHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		{
 			PlayerEnhancedInputComponent->BindAction(ReloadInputAction, ETriggerEvent::Started, this, &ABaseHero::OnReload);
 		}
+		//if (UseAbilityInputAction)
+		//{
+		//	PlayerEnhancedInputComponent->BindAction(UseAbilityInputAction, ETriggerEvent::Started, this, &ABaseHero::OnUseAbilityAction);
+		//}
+		//if (CancelAbilityInputAction)
+		//{
+		//	PlayerEnhancedInputComponent->BindAction(CancelAbilityInputAction, ETriggerEvent::Started, this, &ABaseHero::OnCancelAbilityAction);
+		//}
+	}
+
+	if (UAbilitySystemComponent* ASC = Cast<ATHPlayerState>(GetPlayerState())->GetAbilitySystemComponent())
+	{
+		ASC->BindAbilityActivationToInputComponent(
+			InputComponent,
+			FGameplayAbilityInputBinds(
+				FString("ConfirmTarget"),
+				FString("CancelTarget"),
+				FString("ETHAbilityInputID"),
+				static_cast<int32>(ETHAbilityInputID::Confirm),
+				static_cast<int32>(ETHAbilityInputID::Cancel)
+			)
+		);
 	}
 }
 
@@ -253,6 +290,8 @@ void ABaseHero::Landed(const FHitResult& Hit)
 
 void ABaseHero::OnBasicAttack()
 {
+	if (!bCanBaseAttack) return;
+
 	TraceToCrossHair();
 
 	if (IsLocallyControlled())
@@ -284,6 +323,28 @@ void ABaseHero::OnReload()
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetPlayerState(), Payload.EventTag, Payload);
 	}
 }
+
+//void ABaseHero::OnUseAbilityAction()
+//{
+//	if (IsLocallyControlled())
+//	{
+//		FGameplayEventData Payload;
+//		Payload.Instigator = this;
+//		Payload.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Select.Use"));
+//		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetPlayerState(), Payload.EventTag, Payload);
+//	}
+//}
+//
+//void ABaseHero::OnCancelAbilityAction()
+//{
+//	if (IsLocallyControlled())
+//	{
+//		FGameplayEventData Payload;
+//		Payload.Instigator = this;
+//		Payload.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Select.Cancel"));
+//		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetPlayerState(), Payload.EventTag, Payload);
+//	}
+//}
 
 void ABaseHero::TraceToCrossHair()
 {

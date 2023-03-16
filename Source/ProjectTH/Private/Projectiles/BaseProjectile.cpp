@@ -16,6 +16,7 @@ ABaseProjectile::ABaseProjectile()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	bReplicates = true;
+	SetReplicateMovement(true);
 
 	BulletCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("Box"));
 	SetRootComponent(BulletCollision);
@@ -25,6 +26,7 @@ ABaseProjectile::ABaseProjectile()
 	BulletCollision->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Block);
 	BulletCollision->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldStatic, ECollisionResponse::ECR_Block);
 	BulletCollision->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
+	BulletCollision->IgnoreActorWhenMoving(GetOwner(), true);
 
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
 	ProjectileMovementComponent->bRotationFollowsVelocity = true;
@@ -60,28 +62,6 @@ void ABaseProjectile::Tick(float DeltaTime)
 
 void ABaseProjectile::OnBulletHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	if (ABaseHero* OwnerHero = Cast<ABaseHero>(GetOwner()))
-	{
-		if (ABaseHero* TargetHero = Cast<ABaseHero>(OtherActor))
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Hit!"));
-
-				FGameplayEffectContextHandle EffectContext = OwnerHero->GetAbilitySystemComponent()->MakeEffectContext();
-				EffectContext.AddHitResult(Hit);
-				FGameplayEffectSpecHandle SpecHandle = OwnerHero->GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffectToTarget, 1, EffectContext);
-				if (SpecHandle.IsValid())
-				{
-					FActiveGameplayEffectHandle ActiveGEHandle = OwnerHero->GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), TargetHero->GetAbilitySystemComponent());
-				}
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Decal!"));
-
-			// Decal »ý¼º
-			MulticastSpawnDecal(Hit);
-		}
-	}
 	
 	Destroy();
 }
