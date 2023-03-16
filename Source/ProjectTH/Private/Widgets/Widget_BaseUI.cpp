@@ -4,6 +4,7 @@
 #include "Widgets/Widget_BaseUI.h"
 #include "Components/TextBlock.h"
 #include "Components/ProgressBar.h"
+#include "Components/Image.h"
 
 float UWidget_BaseUI::GetHealthBarPercent()
 {
@@ -68,4 +69,26 @@ void UWidget_BaseUI::SetUltimateGaugeBarPercent(float CrrentGauge)
 void UWidget_BaseUI::SetUltimateGaugeText(float GaugePercent)
 {
 	UltimateGaugeText->SetText(FText::FromString(FString::Printf(TEXT("%d"), int32(GaugePercent))));
+}
+
+void UWidget_BaseUI::SetESkillImage(UTexture2D* Image)
+{
+	ESkillImage->SetBrushFromTexture(Image);
+}
+
+void UWidget_BaseUI::SetMRSkillImage(UTexture2D* Image)
+{
+	RMSkillImage->SetBrushFromTexture(Image);
+}
+
+void UWidget_BaseUI::SetShiftSkillImage(UTexture2D* Image)
+{
+	ShiftSkillImage->SetBrushFromTexture(Image);
+}
+
+void UWidget_BaseUI::SetQSkillImage(UTexture2D* Image)
+{
+	FSlateBrush Brush;
+	Brush.SetResourceObject(Image);
+	UltimateGaugeBar->WidgetStyle.SetFillImage(Brush);
 }

@@ -25,10 +25,6 @@ public:
 	class UTextBlock* BulletNum;
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* MaxBulletNum;
-	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* UltimateGaugeText;
-	UPROPERTY(meta = (BindWidget))
-	class UProgressBar* UltimateGaugeBar;
 
 	UFUNCTION()
 	float GetHealthBarPercent();
@@ -53,8 +49,30 @@ public:
 	void SetBulletNumText(float MaxHP);
 	UFUNCTION()
 	void SetMaxBulletNumText(float MaxHP);
+
+	/** Skill */
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* UltimateGaugeText;
+	UPROPERTY(meta = (BindWidget))
+	class UProgressBar* UltimateGaugeBar;
+	UPROPERTY(meta = (BindWidget))
+	class UImage* ShiftSkillImage;
+	UPROPERTY(meta = (BindWidget))
+	class UImage* ESkillImage;
+	UPROPERTY(meta = (BindWidget))
+	class UImage* RMSkillImage;
+
 	UFUNCTION()
 	void SetUltimateGaugeBarPercent(float CrrentGauge);
 	UFUNCTION()
 	void SetUltimateGaugeText(float GaugePercent);
+	UFUNCTION()
+	void SetESkillImage(UTexture2D* Image);
+	UFUNCTION()
+	void SetMRSkillImage(UTexture2D* Image);
+	UFUNCTION()
+	void SetShiftSkillImage(UTexture2D* Image);
+	UFUNCTION()
+	void SetQSkillImage(UTexture2D* Image);
+
 };

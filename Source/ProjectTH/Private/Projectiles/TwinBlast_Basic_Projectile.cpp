@@ -9,6 +9,10 @@
 
 void ATwinBlast_Basic_Projectile::OnBulletHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
+	Super::OnBulletHit(HitComponent, OtherActor, OtherComp, NormalImpulse, Hit);
+
+	if (OtherActor == GetOwner()) return;
+
 	if (ABaseHero* OwnerHero = Cast<ABaseHero>(GetOwner()))
 	{
 		if (ABaseHero* TargetHero = Cast<ABaseHero>(OtherActor))

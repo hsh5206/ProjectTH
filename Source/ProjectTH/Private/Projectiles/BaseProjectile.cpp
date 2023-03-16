@@ -62,8 +62,7 @@ void ABaseProjectile::Tick(float DeltaTime)
 
 void ABaseProjectile::OnBulletHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	
-	Destroy();
+
 }
 
 void ABaseProjectile::MulticastSpawnDecal_Implementation(const FHitResult& Hit)

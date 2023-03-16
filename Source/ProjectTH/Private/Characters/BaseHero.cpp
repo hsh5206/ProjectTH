@@ -71,6 +71,8 @@ void ABaseHero::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
+	UE_LOG(LogTemp, Error, TEXT("OnPossessedBy!"));
+
 	if (HealthBarWidget->GetWidget())
 	{
 		if (ATHPlayerState* THPS = Cast<ATHPlayerState>(GetPlayerState()))
@@ -80,10 +82,13 @@ void ABaseHero::PossessedBy(AController* NewController)
 		}
 	}
 
-	if (HeroData && HeroData->CrossHairClass)
+	if (HeroData)
 	{
-		CrossHair = CreateWidget(GetWorld(), HeroData->CrossHairClass);
-		CrossHair->AddToViewport();
+		if (HeroData->CrossHairClass)
+		{
+			CrossHair = CreateWidget(GetWorld(), HeroData->CrossHairClass);
+			CrossHair->AddToViewport();
+		}
 	}
 
 	// AbilitySystem의 owner와 avatar세팅
@@ -157,6 +162,15 @@ void ABaseHero::PawnClientRestart()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
+	
+	if (ATHPlayerController* THPC = Cast<ATHPlayerController>(GetController()))
+	{
+		if (ATHHUD* THHUD = Cast<ATHHUD>(THPC->GetHUD()))
+		{
+			THHUD->SetSkillImages();
+		}
+	}
+
 }
 
 void ABaseHero::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -182,6 +196,7 @@ void ABaseHero::ServerSetHeroData_Implementation(const UHeroData* NewHeroData)
 	HeroData->AnimData = NewHeroData->AnimData;
 	HeroData->CrossHairClass = NewHeroData->CrossHairClass;
 	HeroData->HeroASData = NewHeroData->HeroASData;
+	HeroData->HeroSkillData = NewHeroData->HeroSkillData;
 }
 
 void ABaseHero::SetHeroData()
@@ -215,14 +230,6 @@ void ABaseHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		{
 			PlayerEnhancedInputComponent->BindAction(ReloadInputAction, ETriggerEvent::Started, this, &ABaseHero::OnReload);
 		}
-		//if (UseAbilityInputAction)
-		//{
-		//	PlayerEnhancedInputComponent->BindAction(UseAbilityInputAction, ETriggerEvent::Started, this, &ABaseHero::OnUseAbilityAction);
-		//}
-		//if (CancelAbilityInputAction)
-		//{
-		//	PlayerEnhancedInputComponent->BindAction(CancelAbilityInputAction, ETriggerEvent::Started, this, &ABaseHero::OnCancelAbilityAction);
-		//}
 	}
 
 	if (UAbilitySystemComponent* ASC = Cast<ATHPlayerState>(GetPlayerState())->GetAbilitySystemComponent())
@@ -323,28 +330,6 @@ void ABaseHero::OnReload()
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetPlayerState(), Payload.EventTag, Payload);
 	}
 }
-
-//void ABaseHero::OnUseAbilityAction()
-//{
-//	if (IsLocallyControlled())
-//	{
-//		FGameplayEventData Payload;
-//		Payload.Instigator = this;
-//		Payload.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Select.Use"));
-//		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetPlayerState(), Payload.EventTag, Payload);
-//	}
-//}
-//
-//void ABaseHero::OnCancelAbilityAction()
-//{
-//	if (IsLocallyControlled())
-//	{
-//		FGameplayEventData Payload;
-//		Payload.Instigator = this;
-//		Payload.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Select.Cancel"));
-//		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetPlayerState(), Payload.EventTag, Payload);
-//	}
-//}
 
 void ABaseHero::TraceToCrossHair()
 {

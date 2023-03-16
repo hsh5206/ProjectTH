@@ -10,6 +10,7 @@
 #include "Characters/BaseHero.h"
 #include "Widgets/Widget_BaseUI.h"
 #include "AbilitySystem/THAttributeSet.h"
+#include "DataAssets/HeroData.h"
 
 void ATHPlayerController::BeginPlay()
 {
@@ -27,10 +28,21 @@ void ATHPlayerController::ServerSpawnPlayer_Implementation()
 	GameMode->SpawnPlayer(this, SelectedHero);
 }
 
+void ATHPlayerController::SpawnDefaultHUD()
+{
+	Super::SpawnDefaultHUD();
+
+}
+
+void ATHPlayerController::PlayerTick(float DeltaTime)
+{
+	Super::PlayerTick(DeltaTime);
+
+}
+
 void ATHPlayerController::OnPossess(APawn* aPawn)
 {
 	Super::OnPossess(aPawn);
-
 
 	if (ABaseHero* Hero = Cast<ABaseHero>(aPawn))
 	{

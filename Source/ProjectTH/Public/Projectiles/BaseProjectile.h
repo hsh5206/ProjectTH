@@ -23,6 +23,7 @@ public:
 
 	UPROPERTY(EditDefaultsOnly)
 	class UParticleSystem* Tracer;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	class UParticleSystemComponent* TracerComponent;
 
 	UPROPERTY(EditDefaultsOnly)

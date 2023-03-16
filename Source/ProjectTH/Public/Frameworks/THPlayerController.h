@@ -20,6 +20,9 @@ public:
 	UFUNCTION(Server, Reliable)
 	void ServerSpawnPlayer();
 
+	virtual void PlayerTick(float DeltaTime);
+	virtual void SpawnDefaultHUD() override;
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void OnPossess(APawn* aPawn) override;

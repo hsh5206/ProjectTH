@@ -24,7 +24,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
-	UPROPERTY(EditAnywhere, Category = Camera)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera)
 	class USpringArmComponent* SpringArm;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera)
 	class UCameraComponent* Camera;
@@ -56,10 +56,6 @@ public:
 	UInputAction* BasicAttackInputAction;
 	UPROPERTY(EditDefaultsOnly)
 	UInputAction* ReloadInputAction;
-	//UPROPERTY(EditDefaultsOnly)
-	//UInputAction* UseAbilityInputAction;
-	//UPROPERTY(EditDefaultsOnly)
-	//UInputAction* CancelAbilityInputAction;
 
 	/** Move */
 	void OnMoveAction(const FInputActionValue& Value);

@@ -23,5 +23,8 @@ public:
 	FHeroASData HeroASData;
 
 	UPROPERTY(EditDefaultsOnly)
+	FHeroSkillData HeroSkillData;
+
+	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UUserWidget> CrossHairClass;
 };

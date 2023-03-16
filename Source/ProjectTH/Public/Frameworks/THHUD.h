@@ -24,6 +24,12 @@ public:
 	void SetHUDBulletNum(float BN);
 	void SetHUDMaxBulletNum(float MaxBN);
 	void SetHUDUltimateGauge(float UG);
+	
+	void SetSkillImages();
+	void SetESkillImage(UTexture2D* Texture);
+	void SetShiftSkillImage(UTexture2D* Texture);
+	void SetMRSkillImage(UTexture2D* Texture);
+	void SetQSkillImage(UTexture2D* Texture);
 
 protected:
 	virtual void BeginPlay() override;

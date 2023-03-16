@@ -25,6 +25,13 @@ void ATHHUD::DefaultBaseUISettingWhenSpawned()
 		{
 			BaseUI = CreateWidget<UWidget_BaseUI>(THPC, BaseUIClass);
 			BaseUI->AddToViewport();
+
+			// ¼­¹ö
+			if (ABaseHero* Hero = Cast<ABaseHero>(GetOwningPawn()))
+			{
+				SetSkillImages();
+			}
+
 		}
 
 		if (ABaseHero* Hero = Cast<ABaseHero>(GetOwningPawn()))
@@ -97,5 +104,48 @@ void ATHHUD::SetHUDUltimateGauge(float UG)
 	{
 		BaseUI->SetUltimateGaugeBarPercent(UG);
 		BaseUI->SetUltimateGaugeText(UG);
+	}
+}
+
+void ATHHUD::SetSkillImages()
+{
+	if (ABaseHero* Hero = Cast<ABaseHero>(GetOwningPawn()))
+	{
+		if (Hero->HeroData)
+		{
+			if (Hero->HeroData->HeroSkillData.ESkill) SetESkillImage(Hero->HeroData->HeroSkillData.ESkill);
+			if (Hero->HeroData->HeroSkillData.ShiftSkill) SetShiftSkillImage(Hero->HeroData->HeroSkillData.ShiftSkill);
+			if (Hero->HeroData->HeroSkillData.MRSkill) SetMRSkillImage(Hero->HeroData->HeroSkillData.MRSkill);
+			if (Hero->HeroData->HeroSkillData.QSkill) SetQSkillImage(Hero->HeroData->HeroSkillData.QSkill);
+		}
+	}
+}
+
+void ATHHUD::SetESkillImage(UTexture2D* Texture)
+{
+	if (BaseUI)
+	{
+		BaseUI->SetESkillImage(Texture);
+	}
+}
+void ATHHUD::SetShiftSkillImage(UTexture2D* Texture)
+{
+	if (BaseUI)
+	{
+		BaseUI->SetShiftSkillImage(Texture);
+	}
+}
+void ATHHUD::SetMRSkillImage(UTexture2D* Texture)
+{
+	if (BaseUI)
+	{
+		BaseUI->SetMRSkillImage(Texture);
+	}
+}
+void ATHHUD::SetQSkillImage(UTexture2D* Texture)
+{
+	if (BaseUI)
+	{
+		BaseUI->SetQSkillImage(Texture);
 	}
 }
