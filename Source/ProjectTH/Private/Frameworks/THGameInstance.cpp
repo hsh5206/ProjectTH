@@ -5,6 +5,7 @@
 #include "AbilitySystemGlobals.h"
 #include "OnlineSessionSettings.h"
 #include "Interfaces/OnlineSessionInterface.h"
+#include "Blueprint/UserWidget.h"
 
 void UTHGameInstance::Init()
 {
@@ -21,7 +22,23 @@ void UTHGameInstance::Init()
 		SessionInterface = OSS->GetSessionInterface();
 		SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &ThisClass::OnCreateSessionComplete);
 	}
-	
+}
+
+void UTHGameInstance::LoadMenu()
+{
+	if (MainMenuWidgetClass)
+	{
+		MainMenuWidget = CreateWidget(this, MainMenuWidgetClass);
+		MainMenuWidget->AddToViewport();
+		
+		if (APlayerController* PC = GetFirstLocalPlayerController())
+		{
+			FInputModeUIOnly InputMode;
+			PC->SetInputMode(InputMode);
+
+			PC->SetShowMouseCursor(true);
+		}
+	}
 }
 
 void UTHGameInstance::Host()

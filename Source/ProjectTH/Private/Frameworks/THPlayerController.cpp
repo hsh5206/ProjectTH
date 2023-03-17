@@ -11,6 +11,8 @@
 #include "Widgets/Widget_BaseUI.h"
 #include "AbilitySystem/THAttributeSet.h"
 #include "DataAssets/HeroData.h"
+#include "Frameworks/GameModes/MatchGameMode_FreeForAll.h"
+#include "Frameworks/GameModes/MainMenuGameMode.h"
 
 void ATHPlayerController::BeginPlay()
 {
@@ -25,7 +27,10 @@ void ATHPlayerController::BeginPlay()
 void ATHPlayerController::ServerSpawnPlayer_Implementation()
 {
 	ATHGameMode* GameMode = Cast<ATHGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
-	GameMode->SpawnPlayer(this, SelectedHero);
+	if (AMatchGameMode_FreeForAll* MatchGameMode_FFA = Cast<AMatchGameMode_FreeForAll>(GameMode))
+	{
+		MatchGameMode_FFA->SpawnPlayer(this, SelectedHero);
+	}
 }
 
 void ATHPlayerController::SpawnDefaultHUD()

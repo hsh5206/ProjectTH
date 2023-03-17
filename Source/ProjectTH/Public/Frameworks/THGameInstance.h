@@ -18,6 +18,13 @@ class PROJECTTH_API UTHGameInstance : public UGameInstance
 public:
 	virtual void Init() override;
 
+	/** Menu */
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UUserWidget> MainMenuWidgetClass;
+	UUserWidget* MainMenuWidget;
+	UFUNCTION(BlueprintCallable)
+	void LoadMenu();
+
 	/** Multiplay */
 	IOnlineSubsystem* OSS;
 	IOnlineSessionPtr SessionInterface;
