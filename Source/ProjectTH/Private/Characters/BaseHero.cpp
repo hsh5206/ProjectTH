@@ -71,8 +71,6 @@ void ABaseHero::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
-	UE_LOG(LogTemp, Error, TEXT("OnPossessedBy!"));
-
 	if (HealthBarWidget->GetWidget())
 	{
 		if (ATHPlayerState* THPS = Cast<ATHPlayerState>(GetPlayerState()))
