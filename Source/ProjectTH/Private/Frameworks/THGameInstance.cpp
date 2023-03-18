@@ -23,6 +23,8 @@ void UTHGameInstance::Init()
 	IOnlineSubsystem* Subsystem = IOnlineSubsystem::Get();
 	if (Subsystem)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("OSS : %s"), *Subsystem->GetSubsystemName().ToString());
+
 		SessionInterface = Subsystem->GetSessionInterface();
 		if (SessionInterface)
 		{
@@ -34,11 +36,12 @@ void UTHGameInstance::Init()
 			SessionSearch = MakeShareable(new FOnlineSessionSearch());
 			if (SessionSearch.IsValid())
 			{
-				SessionSearch->bIsLanQuery = true;
+				//SessionSearch->bIsLanQuery = true;
+				SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals); // 스팀에서 로비
+				SessionSearch->MaxSearchResults = 1000;
 			}
 		}
 	}
-
 }
 
 void UTHGameInstance::LoadMenu()
@@ -63,12 +66,16 @@ void UTHGameInstance::CreateSession(int32 PlayerNum, FString Title, FString Map,
 	if (SessionInterface.IsValid())
 	{
 		FOnlineSessionSettings SessionSettings;
+
 		SessionSettings.bIsLANMatch = true;
 		SessionSettings.NumPublicConnections = PlayerNum;
 		SessionSettings.bShouldAdvertise = true;
+		SessionSettings.bUsesPresence = true; // 스팀에서 로비형식으로
+
 		SessionSettings.Set(SETTING_SESSION_TEMPLATE_NAME, Title, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 		SessionSettings.Set(SETTING_GAMEMODE, GameMode, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 		SessionSettings.Set(SETTING_MAPNAME, Map, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+
 		SessionInterface->CreateSession(0, FName("THGame"), SessionSettings);
 	}
 }
