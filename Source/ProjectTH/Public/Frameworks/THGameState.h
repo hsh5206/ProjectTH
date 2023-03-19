@@ -13,5 +13,4 @@ UCLASS()
 class PROJECTTH_API ATHGameState : public AGameState
 {
 	GENERATED_BODY()
-	
 };

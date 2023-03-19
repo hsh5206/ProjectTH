@@ -52,6 +52,7 @@ void ATwinBlast_Missile_Projectile::OnBulletHit(UPrimitiveComponent* HitComponen
 				{
 					FGameplayEffectContextHandle EffectContext = OwnerHero->GetAbilitySystemComponent()->MakeEffectContext();
 					EffectContext.AddHitResult(HitResult);
+					EffectContext.AddInstigator(OwnerHero, OwnerHero);
 					FGameplayEffectSpecHandle SpecHandle = OwnerHero->GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffectToTarget, 1, EffectContext);
 					if (SpecHandle.IsValid())
 					{

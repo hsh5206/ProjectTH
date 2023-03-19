@@ -20,6 +20,7 @@ void ATwinBlast_Basic_Projectile::OnBulletHit(UPrimitiveComponent* HitComponent,
 
 				FGameplayEffectContextHandle EffectContext = OwnerHero->GetAbilitySystemComponent()->MakeEffectContext();
 				EffectContext.AddHitResult(Hit);
+				EffectContext.AddInstigator(GetOwner(), GetOwner());
 				FGameplayEffectSpecHandle SpecHandle = OwnerHero->GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffectToTarget, 1, EffectContext);
 				if (SpecHandle.IsValid())
 				{

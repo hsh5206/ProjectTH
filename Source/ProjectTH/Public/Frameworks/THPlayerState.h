@@ -20,6 +20,12 @@ public:
 	ATHPlayerState();
 	class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	class UTHAttributeSet* GetAttributeSet() const;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+	UPROPERTY(BlueprintReadOnly, Replicated)
+	int32 Kill = 0;
+	UPROPERTY(BlueprintReadOnly, Replicated)
+	int32 Death = 0;
 
 protected:
 	virtual void BeginPlay() override;

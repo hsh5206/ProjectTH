@@ -2,9 +2,11 @@
 
 
 #include "Frameworks/THPlayerState.h"
+#include "Net/UnrealNetwork.h"
 
 #include "AbilitySystem/THAbilitySystemComponent.h"
 #include "AbilitySystem/THAttributeSet.h"
+#include "GameplayEffectExtension.h"
 
 #include "Characters/BaseHero.h"
 #include "Frameworks/THPlayerController.h"
@@ -18,6 +20,14 @@ ATHPlayerState::ATHPlayerState()
 
 	AttributeSet = CreateDefaultSubobject<UTHAttributeSet>(TEXT("AttributeSet"));
 	NetUpdateFrequency = 100.0f;
+}
+
+void ATHPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ATHPlayerState, Kill);
+	DOREPLIFETIME(ATHPlayerState, Death);
 }
 
 UAbilitySystemComponent* ATHPlayerState::GetAbilitySystemComponent() const
@@ -65,6 +75,18 @@ void ATHPlayerState::OnHealthChanged(const FOnAttributeChangeData& Data)
 	if (FMath::IsNearlyEqual(Data.NewValue, 0.f))
 	{
 		Cast<ABaseHero>(GetPawn())->Death();
+
+		// AActor* FromActor = Data.GEModData->EffectSpec.GetContext().GetInstigator();
+		if (Data.GEModData)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Data.GEModData"));
+			AActor* FromActor = Data.GEModData->EffectSpec.GetEffectContext().GetInstigator();
+			if (ABaseHero* FromHero = Cast<ABaseHero>(FromActor))
+			{
+				Cast<ATHPlayerState>(FromHero->GetPlayerState())->Kill += 1;
+				Death += 1;
+			}
+		}
 	}
 }
 

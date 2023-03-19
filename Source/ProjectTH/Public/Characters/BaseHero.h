@@ -56,6 +56,14 @@ public:
 	UInputAction* BasicAttackInputAction;
 	UPROPERTY(EditDefaultsOnly)
 	UInputAction* ReloadInputAction;
+	UPROPERTY(EditDefaultsOnly)
+	class UInputAction* OnSeeScroeAction;
+	void SeeScore();
+	void CancelSeeScore();
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UUserWidget> ScoreWidgetClass;
+	UUserWidget* ScoreWidget;
 
 	/** Move */
 	void OnMoveAction(const FInputActionValue& Value);

@@ -169,7 +169,6 @@ void ABaseHero::PawnClientRestart()
 		}
 	}
 
-
 	if (GetController())
 	{
 		if (APlayerController* PC = Cast<APlayerController>(GetController()))
@@ -239,6 +238,11 @@ void ABaseHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		if (ReloadInputAction)
 		{
 			PlayerEnhancedInputComponent->BindAction(ReloadInputAction, ETriggerEvent::Started, this, &ABaseHero::OnReload);
+		}
+		if (OnSeeScroeAction)
+		{
+			PlayerEnhancedInputComponent->BindAction(OnSeeScroeAction, ETriggerEvent::Started, this, &ABaseHero::SeeScore);
+			PlayerEnhancedInputComponent->BindAction(OnSeeScroeAction, ETriggerEvent::Completed, this, &ABaseHero::CancelSeeScore);
 		}
 	}
 
@@ -363,6 +367,22 @@ void ABaseHero::Respawn()
 {
 	Cast<ATHPlayerController>(GetController())->ServerSpawnPlayer();
 	SetLifeSpan(1.f);
+}
+
+void ABaseHero::SeeScore()
+{
+	UE_LOG(LogTemp, Warning, TEXT("SeeScore"));
+	if (!ScoreWidget && ScoreWidgetClass)
+	{
+		ScoreWidget = CreateWidget(GetWorld(), ScoreWidgetClass);
+	}
+	if(ScoreWidget) ScoreWidget->AddToViewport();
+}
+
+void ABaseHero::CancelSeeScore()
+{
+	UE_LOG(LogTemp, Warning, TEXT("FinSeeScore"));
+	if (ScoreWidget) ScoreWidget->RemoveFromParent();
 }
 
 void ABaseHero::TraceToCrossHair()

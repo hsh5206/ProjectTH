@@ -21,6 +21,7 @@ void ATwinBlaster_Ultimate_Projectile::OnBulletHit(UPrimitiveComponent* HitCompo
 
 			FGameplayEffectContextHandle EffectContext = OwnerHero->GetAbilitySystemComponent()->MakeEffectContext();
 			EffectContext.AddHitResult(Hit);
+			EffectContext.AddInstigator(OwnerHero, OwnerHero);
 			FGameplayEffectSpecHandle SpecHandle = OwnerHero->GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffectToTarget, 1, EffectContext);
 			if (SpecHandle.IsValid())
 			{
@@ -44,6 +45,9 @@ void ATwinBlaster_Ultimate_Projectile::BeginPlay()
 {
 	Super::BeginPlay();
 
-	TracerComponent->SetWorldScale3D(FVector(20.f, 20.f, 20.f));
+	if (TracerComponent)
+	{
+		TracerComponent->SetWorldScale3D(FVector(20.f, 20.f, 20.f));
+	}
 	//TracerComponent->SetWorldRotation(FRotator(-GetActorRotation().Pitch, -GetActorRotation().Yaw, -GetActorRotation().Roll));
 }
