@@ -25,6 +25,8 @@ public:
 	class UTextBlock* BulletNum;
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* MaxBulletNum;
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* PlayerName;
 
 	UFUNCTION()
 	float GetHealthBarPercent();
@@ -38,7 +40,7 @@ public:
 	float GetMaxBulletNumText();
 	UFUNCTION()
 	float GetUltimateGauge();
-
+	
 	UFUNCTION()
 	void SetHealthBarPercent(float CurrentHP, float MaxHP);
 	UFUNCTION()
@@ -49,6 +51,8 @@ public:
 	void SetBulletNumText(float MaxHP);
 	UFUNCTION()
 	void SetMaxBulletNumText(float MaxHP);
+	UFUNCTION()
+	void SetPlayerNameText(const FString& Name);
 
 	/** Skill */
 	UPROPERTY(meta = (BindWidget))

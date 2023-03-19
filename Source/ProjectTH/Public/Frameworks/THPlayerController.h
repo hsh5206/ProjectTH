@@ -27,8 +27,6 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void OnPossess(APawn* aPawn) override;
 
-	
-
 private:
 	class ATHHUD* THHUD;
 };

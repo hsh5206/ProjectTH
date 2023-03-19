@@ -24,6 +24,8 @@ public:
 	void SetHUDBulletNum(float BN);
 	void SetHUDMaxBulletNum(float MaxBN);
 	void SetHUDUltimateGauge(float UG);
+
+	void SetHUDPlayerName(const FString& Name);
 	
 	void SetSkillImages();
 	void SetESkillImage(UTexture2D* Texture);

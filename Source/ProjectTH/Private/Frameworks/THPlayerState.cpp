@@ -3,6 +3,7 @@
 
 #include "Frameworks/THPlayerState.h"
 #include "Net/UnrealNetwork.h"
+#include "TimerManager.h"
 
 #include "AbilitySystem/THAbilitySystemComponent.h"
 #include "AbilitySystem/THAttributeSet.h"
@@ -11,6 +12,10 @@
 #include "Characters/BaseHero.h"
 #include "Frameworks/THPlayerController.h"
 #include "Frameworks/THHUD.h"
+
+#include "OnlineSubsystem.h"
+#include "OnlineSubsystemSteam.h"
+#include "Interfaces/OnlineIdentityInterface.h"
 
 ATHPlayerState::ATHPlayerState()
 {
@@ -28,6 +33,7 @@ void ATHPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 
 	DOREPLIFETIME(ATHPlayerState, Kill);
 	DOREPLIFETIME(ATHPlayerState, Death);
+	DOREPLIFETIME(ATHPlayerState, Name);
 }
 
 UAbilitySystemComponent* ATHPlayerState::GetAbilitySystemComponent() const
@@ -55,6 +61,29 @@ void ATHPlayerState::BeginPlay()
 	GetAbilitySystemComponent()->GetGameplayAttributeValueChangeDelegate(GetAttributeSet()->GetMaxBulletNumAttribute()).AddUObject(this, &ATHPlayerState::OnMaxBulletNumChanged);
 	GetAbilitySystemComponent()->GetGameplayAttributeValueChangeDelegate(GetAttributeSet()->GetBulletNumAttribute()).AddUObject(this, &ATHPlayerState::OnBulletNumChanged);
 	GetAbilitySystemComponent()->GetGameplayAttributeValueChangeDelegate(GetAttributeSet()->GetUltimateGaugeAttribute()).AddUObject(this, &ATHPlayerState::OnUltimateGaugeChanged);
+
+	IOnlineSubsystem* ion = IOnlineSubsystem::Get();
+	Name = ion->GetIdentityInterface()->GetPlayerNickname(0);
+	if (Name.Len() > 25)
+	{
+		FString temp = "";
+		for (int i = 0; i < 25; i++)
+		{
+			temp += Name[i];
+		}
+		temp += "...";
+		Name = temp;
+	}
+
+	GetWorldTimerManager().SetTimer(UpdateTimer, this, &ATHPlayerState::DefaultSetup, .1f, true);
+}
+
+void ATHPlayerState::DefaultSetup()
+{
+	if (OwningTHHUD)
+	{
+		OwningTHHUD->SetHUDPlayerName(Name);
+	}
 }
 
 void ATHPlayerState::OnMaxHealthChanged(const FOnAttributeChangeData& Data)

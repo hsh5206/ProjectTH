@@ -71,6 +71,11 @@ void UWidget_BaseUI::SetUltimateGaugeText(float GaugePercent)
 	UltimateGaugeText->SetText(FText::FromString(FString::Printf(TEXT("%d"), int32(GaugePercent))));
 }
 
+void UWidget_BaseUI::SetPlayerNameText(const FString& Name)
+{
+	PlayerName->SetText(FText::FromString(Name));
+}
+
 void UWidget_BaseUI::SetESkillImage(UTexture2D* Image)
 {
 	ESkillImage->SetBrushFromTexture(Image);

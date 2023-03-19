@@ -107,6 +107,14 @@ void ATHHUD::SetHUDUltimateGauge(float UG)
 	}
 }
 
+void ATHHUD::SetHUDPlayerName(const FString& Name)
+{
+	if (BaseUI && BaseUI->PlayerName)
+	{
+		BaseUI->SetPlayerNameText(Name);
+	}
+}
+
 void ATHHUD::SetSkillImages()
 {
 	if (ABaseHero* Hero = Cast<ABaseHero>(GetOwningPawn()))

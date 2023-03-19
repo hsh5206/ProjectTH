@@ -26,6 +26,8 @@ public:
 	int32 Kill = 0;
 	UPROPERTY(BlueprintReadOnly, Replicated)
 	int32 Death = 0;
+	UPROPERTY(BlueprintReadOnly, Replicated)
+	FString Name;
 
 protected:
 	virtual void BeginPlay() override;
@@ -46,4 +48,6 @@ public:
 private:
 	class ATHPlayerController* OwningTHController;
 	class ATHHUD* OwningTHHUD;
+	FTimerHandle UpdateTimer;
+	void DefaultSetup();
 };

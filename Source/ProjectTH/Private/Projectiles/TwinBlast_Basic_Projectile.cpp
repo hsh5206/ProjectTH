@@ -17,10 +17,9 @@ void ATwinBlast_Basic_Projectile::OnBulletHit(UPrimitiveComponent* HitComponent,
 	{
 		if (ABaseHero* TargetHero = Cast<ABaseHero>(OtherActor))
 		{
-
 				FGameplayEffectContextHandle EffectContext = OwnerHero->GetAbilitySystemComponent()->MakeEffectContext();
 				EffectContext.AddHitResult(Hit);
-				EffectContext.AddInstigator(GetOwner(), GetOwner());
+				EffectContext.AddInstigator(OwnerHero, OwnerHero);
 				FGameplayEffectSpecHandle SpecHandle = OwnerHero->GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffectToTarget, 1, EffectContext);
 				if (SpecHandle.IsValid())
 				{
@@ -33,7 +32,6 @@ void ATwinBlast_Basic_Projectile::OnBulletHit(UPrimitiveComponent* HitComponent,
 				{
 					FActiveGameplayEffectHandle ActiveGEHandleSelf = OwnerHero->GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*SpecHandleToSelf.Data.Get());
 				}
-
 		}
 		else
 		{
