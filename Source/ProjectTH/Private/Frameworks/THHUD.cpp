@@ -157,3 +157,14 @@ void ATHHUD::SetQSkillImage(UTexture2D* Texture)
 		BaseUI->SetQSkillImage(Texture);
 	}
 }
+
+
+void ATHHUD::AddWinScreen(APlayerController* PC)
+{
+	CreateWidget(PC, WinWidgetClass)->AddToViewport();
+}
+
+void ATHHUD::AddLoseScreen(APlayerController* PC)
+{
+	CreateWidget(PC, LoseWidgetClass)->AddToViewport();
+}

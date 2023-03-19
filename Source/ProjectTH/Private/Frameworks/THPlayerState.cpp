@@ -12,6 +12,7 @@
 #include "Characters/BaseHero.h"
 #include "Frameworks/THPlayerController.h"
 #include "Frameworks/THHUD.h"
+#include "Frameworks/THGameState.h"
 
 #include "OnlineSubsystem.h"
 #include "OnlineSubsystemSteam.h"
@@ -101,19 +102,34 @@ void ATHPlayerState::OnHealthChanged(const FOnAttributeChangeData& Data)
 		OwningTHHUD->SetHUDHealth(Data.NewValue);
 	}
 
-	if (FMath::IsNearlyEqual(Data.NewValue, 0.f))
+	//if (FMath::IsNearlyEqual(Data.NewValue, 0.f))
+	if(Data.NewValue <= 0.f)
 	{
+		if (OwningTHHUD)
+		{
+			OwningTHHUD->SetHUDHealth(0.f);
+		}
+
 		Cast<ABaseHero>(GetPawn())->Death();
 
-		// AActor* FromActor = Data.GEModData->EffectSpec.GetContext().GetInstigator();
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("0 Health")));
 		if (Data.GEModData)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Data.GEModData"));
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("GetData")));
+
 			AActor* FromActor = Data.GEModData->EffectSpec.GetEffectContext().GetInstigator();
-			if (ABaseHero* FromHero = Cast<ABaseHero>(FromActor))
+			if (FromActor)
 			{
-				Cast<ATHPlayerState>(FromHero->GetPlayerState())->Kill += 1;
-				Death += 1;
+				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("FromActor")));
+
+				if (ABaseHero* FromHero = Cast<ABaseHero>(FromActor))
+				{
+					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Clear")));
+					Cast<ATHPlayerState>(FromHero->GetPlayerState())->Kill += 1;
+					Death += 1;
+
+					Cast<ATHGameState>(GetWorld()->GetGameState())->SetMostKill();
+				}
 			}
 		}
 	}
@@ -140,5 +156,21 @@ void ATHPlayerState::OnUltimateGaugeChanged(const FOnAttributeChangeData& Data)
 	if (OwningTHHUD)
 	{
 		OwningTHHUD->SetHUDUltimateGauge(Data.NewValue);
+	}
+}
+
+void ATHPlayerState::AddWinScreen()
+{
+	if (OwningTHHUD)
+	{
+		OwningTHHUD->AddWinScreen(GetPlayerController());
+	}
+}
+
+void ATHPlayerState::AddLoseScreen()
+{
+	if (OwningTHHUD)
+	{
+		OwningTHHUD->AddWinScreen(GetPlayerController());
 	}
 }

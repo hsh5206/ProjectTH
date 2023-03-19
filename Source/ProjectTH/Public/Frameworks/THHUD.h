@@ -16,6 +16,14 @@ public:
 	TSubclassOf<class UWidget_BaseUI> BaseUIClass;
 	UWidget_BaseUI* BaseUI;
 
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UUserWidget> WinWidgetClass;
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UUserWidget> LoseWidgetClass;
+	void AddWinScreen(APlayerController* PC);
+	void AddLoseScreen(APlayerController* PC);
+
 	UFUNCTION()
 	void DefaultBaseUISettingWhenSpawned();
 

@@ -39,6 +39,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void FindSessions();
 	void JoinToSession(const FOnlineSessionSearchResult& SessionResults);
+	void DestroySession();
 
 	void OnCreateSessionComplete(FName SessionName, bool bSuccess);
 	void OnDestroySessionComplete(FName SessionName, bool bSuccess);

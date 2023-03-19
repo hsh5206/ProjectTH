@@ -360,7 +360,7 @@ void ABaseHero::Death()
 	GetMesh()->AddImpulse(FVector(0.f, 0.f, 5000.f));
 	GetCharacterMovement()->DisableMovement();
 	
-	GetWorldTimerManager().SetTimer(DeathThenRespawnTimer, this, &ABaseHero::Respawn, 5.f, true);
+	GetWorldTimerManager().SetTimer(DeathThenRespawnTimer, this, &ABaseHero::Respawn, 8.f, true);
 }
 
 void ABaseHero::Respawn()

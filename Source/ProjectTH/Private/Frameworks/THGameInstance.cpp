@@ -99,6 +99,14 @@ void UTHGameInstance::JoinToSession(const FOnlineSessionSearchResult& SessionRes
 	}
 }
 
+void UTHGameInstance::DestroySession()
+{
+	if (SessionInterface.IsValid())
+	{
+		SessionInterface->DestroySession(FName("THGame"));
+	}
+}
+
 void UTHGameInstance::OnCreateSessionComplete(FName SessionName, bool bSuccess)
 {
 	if (bSuccess)
@@ -108,7 +116,6 @@ void UTHGameInstance::OnCreateSessionComplete(FName SessionName, bool bSuccess)
 		GetWorld()->ServerTravel("/Game/Maps/TestMap?listen");
 	}
 }
-
 
 void UTHGameInstance::OnFindSessionsComplete(bool bSuccesful)
 {

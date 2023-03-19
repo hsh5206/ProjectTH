@@ -18,7 +18,6 @@ void ATwinBlaster_Ultimate_Projectile::OnBulletHit(UPrimitiveComponent* HitCompo
 	{
 		if (ABaseHero* TargetHero = Cast<ABaseHero>(OtherActor))
 		{
-
 			FGameplayEffectContextHandle EffectContext = OwnerHero->GetAbilitySystemComponent()->MakeEffectContext();
 			EffectContext.AddHitResult(Hit);
 			EffectContext.AddInstigator(OwnerHero, OwnerHero);

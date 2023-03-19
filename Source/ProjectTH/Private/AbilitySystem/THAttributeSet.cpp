@@ -49,7 +49,7 @@ void UTHAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
-		SetHealth(FMath::Clamp(GetHealth(), 0.0f, GetMaxHealth()));
+		//SetHealth(FMath::Clamp(GetHealth(), 0.0f, GetMaxHealth()));
 	}
 
 	if (Data.EvaluatedData.Attribute == GetBulletNumAttribute())
