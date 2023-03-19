@@ -7,12 +7,12 @@
 #include "Widgets/Widget_Rooms.h"
 #include "Frameworks/THGameInstance.h"
 
-void UWidget_SessionInfo::SetText(FString& TitleName, FString& MapName, FString& GmaeMode, int32 MaxPlayerNum, int32 PingNum)
+void UWidget_SessionInfo::SetText(FString& TitleName, FString& MapName, FString& GmaeMode, int32 CurrPlayerNum, int32 MaxPlayerNum, int32 PingNum)
 {
 	Title->SetText(FText::FromString(TitleName));
 	Map->SetText(FText::FromString(MapName));
 	GameMode->SetText(FText::FromString(GmaeMode));
-	PlayerNum->SetText(FText::FromString(FString::Printf(TEXT("%d"), MaxPlayerNum)));
+	PlayerNum->SetText(FText::FromString(FString::Printf(TEXT("%d / %d"), CurrPlayerNum, MaxPlayerNum)));
 	Ping->SetText(FText::FromString(FString::Printf(TEXT("%d ms"), PingNum)));
 }
 

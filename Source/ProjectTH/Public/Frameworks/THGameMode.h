@@ -15,6 +15,7 @@ class PROJECTTH_API ATHGameMode : public AGameMode
 	GENERATED_BODY()
 	
 public:
+	ATHGameMode();
 	virtual void PostLogin(APlayerController* NewPlayer) override;
 	virtual void SwapPlayerControllers(APlayerController* OldPC, APlayerController* NewPC);
 	virtual void Logout(AController* Exiting) override;

@@ -38,6 +38,8 @@
 ABaseHero::ABaseHero()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	SetReplicates(true);
+	SetReplicateMovement(true);
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(GetMesh());
@@ -45,7 +47,7 @@ ABaseHero::ABaseHero()
 	SpringArm->bEnableCameraLag = true;
 	SpringArm->bEnableCameraRotationLag = true;
 	SpringArm->CameraLagSpeed = 30.f;
-	SpringArm->SocketOffset = FVector(0.f, 70.f, 70.f);
+	SpringArm->SocketOffset = FVector(0.f, 70.f, 100.f);
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
@@ -119,19 +121,24 @@ void ABaseHero::OnRep_PlayerState()
 	GetAbilitySystemComponent()->InitAbilityActorInfo(GetPlayerState(), this);
 	InitializeAttributes();
 
-	/*if (UAbilitySystemComponent* ASC = Cast<ATHPlayerState>(GetPlayerState())->GetAbilitySystemComponent())
+	if (GetPlayerState() && !bIsBindASCInput && InputComponent)
 	{
-		ASC->BindAbilityActivationToInputComponent(
-			InputComponent,
-			FGameplayAbilityInputBinds(
-				FString("ConfirmTarget"),
-				FString("CancelTarget"),
-				FString("ETHAbilityInputID"),
-				static_cast<int32>(ETHAbilityInputID::Confirm),
-				static_cast<int32>(ETHAbilityInputID::Cancel)
-			)
-		);
-	}*/
+		if (UAbilitySystemComponent* ASC = Cast<ATHPlayerState>(GetPlayerState())->GetAbilitySystemComponent())
+		{
+			ASC->BindAbilityActivationToInputComponent(
+				InputComponent,
+				FGameplayAbilityInputBinds(
+					FString("ConfirmTarget"),
+					FString("CancelTarget"),
+					FString("ETHAbilityInputID"),
+					static_cast<int32>(ETHAbilityInputID::Confirm),
+					static_cast<int32>(ETHAbilityInputID::Cancel)
+				)
+			);
+
+			bIsBindASCInput = true;
+		}
+	}
 }
 
 void ABaseHero::BeginPlay()
@@ -152,15 +159,7 @@ void ABaseHero::PawnClientRestart()
 {
 	Super::PawnClientRestart();
 
-	if (APlayerController* PC = Cast<APlayerController>(GetController()))
-	{
-		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer()))
-		{
-			Subsystem->ClearAllMappings();
-			Subsystem->AddMappingContext(DefaultMappingContext, 0);
-		}
-	}
-	
+
 	if (ATHPlayerController* THPC = Cast<ATHPlayerController>(GetController()))
 	{
 		if (ATHHUD* THHUD = Cast<ATHHUD>(THPC->GetHUD()))
@@ -169,6 +168,18 @@ void ABaseHero::PawnClientRestart()
 		}
 	}
 
+
+	if (GetController())
+	{
+		if (APlayerController* PC = Cast<APlayerController>(GetController()))
+		{
+			if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer()))
+			{
+				Subsystem->ClearAllMappings();
+				Subsystem->AddMappingContext(DefaultMappingContext, 0);
+			}
+		}
+	}
 }
 
 void ABaseHero::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -230,18 +241,23 @@ void ABaseHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		}
 	}
 
-	if (UAbilitySystemComponent* ASC = Cast<ATHPlayerState>(GetPlayerState())->GetAbilitySystemComponent())
+	if (GetPlayerState() && !bIsBindASCInput)
 	{
-		ASC->BindAbilityActivationToInputComponent(
-			InputComponent,
-			FGameplayAbilityInputBinds(
-				FString("ConfirmTarget"),
-				FString("CancelTarget"),
-				FString("ETHAbilityInputID"),
-				static_cast<int32>(ETHAbilityInputID::Confirm),
-				static_cast<int32>(ETHAbilityInputID::Cancel)
-			)
-		);
+		if (UAbilitySystemComponent* ASC = Cast<ATHPlayerState>(GetPlayerState())->GetAbilitySystemComponent())
+		{
+			ASC->BindAbilityActivationToInputComponent(
+				InputComponent,
+				FGameplayAbilityInputBinds(
+					FString("ConfirmTarget"),
+					FString("CancelTarget"),
+					FString("ETHAbilityInputID"),
+					static_cast<int32>(ETHAbilityInputID::Confirm),
+					static_cast<int32>(ETHAbilityInputID::Cancel)
+				)
+			);
+
+			bIsBindASCInput = true;
+		}
 	}
 }
 

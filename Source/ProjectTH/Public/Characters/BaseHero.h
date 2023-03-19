@@ -99,4 +99,7 @@ public:
 public:
 	virtual void InitializeAttributes();
 	virtual void GiveAbilities();
+
+private:
+	bool bIsBindASCInput = false;
 };

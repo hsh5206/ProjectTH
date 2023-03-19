@@ -38,5 +38,5 @@ public:
 	int32 Index;
 	void SetParentAndIndex(UWidget_Rooms* Widget, int32 index);
 
-	void SetText(FString& TitleName, FString& MapName, FString& GmaeMode, int32 MaxPlayerNum, int32 PingNum);
+	void SetText(FString& TitleName, FString& MapName, FString& GmaeMode, int32 CurrPlayerNum, int32 MaxPlayerNum, int32 PingNum);
 };

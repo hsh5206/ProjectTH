@@ -91,5 +91,8 @@ void ATwinBlast_Missile_Projectile::BeginPlay()
 {
 	Super::BeginPlay();
 
-	TracerComponent->SetWorldRotation(FRotator(GetActorRotation().Pitch, -GetActorRotation().Yaw, GetActorRotation().Roll));
+	if (TracerComponent)
+	{
+		TracerComponent->SetWorldRotation(FRotator(GetActorRotation().Pitch, -GetActorRotation().Yaw, GetActorRotation().Roll));
+	}
 }

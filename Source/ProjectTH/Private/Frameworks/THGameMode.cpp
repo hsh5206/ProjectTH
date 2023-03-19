@@ -3,6 +3,11 @@
 
 #include "Frameworks/THGameMode.h"
 
+ATHGameMode::ATHGameMode()
+{
+	//bUseSeamlessTravel = true;
+}
+
 void ATHGameMode::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);

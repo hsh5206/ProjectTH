@@ -44,6 +44,7 @@ void UWidget_Rooms::AfterFindSession(const TArray<FOnlineSessionSearchResult>& S
 		FString GameMode;
 		SessionResult.Session.SessionSettings.Get(SETTING_GAMEMODE, GameMode);
 		int32 MaxPlayerNum = SessionResult.Session.SessionSettings.NumPublicConnections;
+		int32 CurrPlayerNum = MaxPlayerNum - SessionResult.Session.NumOpenPublicConnections;
 		int32 Ping = SessionResult.PingInMs;
 
 		if (GEngine)
@@ -57,7 +58,7 @@ void UWidget_Rooms::AfterFindSession(const TArray<FOnlineSessionSearchResult>& S
 		}
 
 		UWidget_SessionInfo* Info = CreateWidget<UWidget_SessionInfo>(GetWorld(), ServerInfoClass);
-		Info->SetText(Title, MapName, GameMode, MaxPlayerNum, Ping);
+		Info->SetText(Title, MapName, GameMode, CurrPlayerNum, MaxPlayerNum, Ping);
 		Info->SearchResult = SessionResult;
 		Info->SetParentAndIndex(this, index);
 		SessionScroll->AddChild(Info);
