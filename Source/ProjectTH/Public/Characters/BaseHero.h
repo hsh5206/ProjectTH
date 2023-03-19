@@ -77,6 +77,11 @@ public:
 	/** Reload */
 	void OnReload();
 
+	/** Death */
+	void Death();
+	void Respawn();
+	FTimerHandle DeathThenRespawnTimer;
+
 	class UUserWidget* CrossHair;
 	UFUNCTION(BlueprintCallable)
 	void TraceToCrossHair();

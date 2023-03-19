@@ -61,6 +61,11 @@ void ATHPlayerState::OnHealthChanged(const FOnAttributeChangeData& Data)
 	{
 		OwningTHHUD->SetHUDHealth(Data.NewValue);
 	}
+
+	if (FMath::IsNearlyEqual(Data.NewValue, 0.f))
+	{
+		Cast<ABaseHero>(GetPawn())->Death();
+	}
 }
 
 void ATHPlayerState::OnMaxBulletNumChanged(const FOnAttributeChangeData& Data)

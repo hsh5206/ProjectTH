@@ -12,6 +12,7 @@
 #include "Components/WidgetComponent.h"
 #include "Net/UnrealNetwork.h"
 #include "Components/ProgressBar.h"
+#include "Components/CapsuleComponent.h"
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -343,6 +344,25 @@ void ABaseHero::OnReload()
 		Payload.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Movement.Reload"));
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetPlayerState(), Payload.EventTag, Payload);
 	}
+}
+
+void ABaseHero::Death()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Death"));
+
+	//GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	GetMesh()->SetCollisionProfileName(FName("Ragdoll"));
+	GetMesh()->SetSimulatePhysics(true);
+	GetMesh()->AddImpulse(FVector(0.f, 0.f, 5000.f));
+	GetCharacterMovement()->DisableMovement();
+	
+	GetWorldTimerManager().SetTimer(DeathThenRespawnTimer, this, &ABaseHero::Respawn, 5.f, true);
+}
+
+void ABaseHero::Respawn()
+{
+	Cast<ATHPlayerController>(GetController())->ServerSpawnPlayer();
+	SetLifeSpan(1.f);
 }
 
 void ABaseHero::TraceToCrossHair()
