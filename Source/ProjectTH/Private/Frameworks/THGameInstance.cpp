@@ -76,7 +76,10 @@ void UTHGameInstance::CreateSession(int32 PlayerNum, FString Title, FString Map,
 		SessionSettings.Set(SETTING_GAMEMODE, GameMode, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 		SessionSettings.Set(SETTING_MAPNAME, Map, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 
-		SessionInterface->CreateSession(0, FName("THGame"), SessionSettings);
+		if (!SessionInterface->CreateSession(0, FName("THGame"), SessionSettings))
+		{
+			DestroySession();
+		}
 	}
 }
 

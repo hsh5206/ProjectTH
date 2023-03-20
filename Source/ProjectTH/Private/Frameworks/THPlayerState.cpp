@@ -112,19 +112,13 @@ void ATHPlayerState::OnHealthChanged(const FOnAttributeChangeData& Data)
 
 		Cast<ABaseHero>(GetPawn())->Death();
 
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("0 Health")));
 		if (Data.GEModData)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("GetData")));
-
 			AActor* FromActor = Data.GEModData->EffectSpec.GetEffectContext().GetInstigator();
 			if (FromActor)
 			{
-				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("FromActor")));
-
 				if (ABaseHero* FromHero = Cast<ABaseHero>(FromActor))
 				{
-					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Clear")));
 					Cast<ATHPlayerState>(FromHero->GetPlayerState())->Kill += 1;
 					Death += 1;
 
