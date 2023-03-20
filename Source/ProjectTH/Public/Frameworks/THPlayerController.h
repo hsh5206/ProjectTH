@@ -15,7 +15,7 @@ class PROJECTTH_API ATHPlayerController : public APlayerController
 	GENERATED_BODY()
 	
 public:
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TSubclassOf<class ABaseHero> SelectedHero;
 	UFUNCTION(Server, Reliable)
 	void ServerSpawnPlayer();

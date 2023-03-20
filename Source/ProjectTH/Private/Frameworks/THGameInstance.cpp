@@ -159,5 +159,5 @@ void UTHGameInstance::OnJoinSessionComplete(FName SessionName, EOnJoinSessionCom
 
 void UTHGameInstance::OnDestroySessionComplete(FName SessionName, bool bSuccess)
 {
-
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("DestroySession : %d"), bSuccess));
 }
