@@ -53,6 +53,8 @@ void AHero_Revenant::OnEKey()
 {
 	if (IsLocallyControlled())
 	{
+		TraceToCrossHair();
+
 		FGameplayEventData Payload;
 		Payload.Instigator = this;
 		Payload.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Ability.EKey"));

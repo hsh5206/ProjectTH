@@ -360,13 +360,12 @@ void ABaseHero::Death()
 	GetMesh()->AddImpulse(FVector(0.f, 0.f, 5000.f));
 	GetCharacterMovement()->DisableMovement();
 	
-	GetWorldTimerManager().SetTimer(DeathThenRespawnTimer, this, &ABaseHero::Respawn, 8.f, true);
+	GetWorldTimerManager().SetTimer(DeathThenRespawnTimer, this, &ABaseHero::Respawn, .5f, false);
 }
 
 void ABaseHero::Respawn()
 {
-	Cast<ATHPlayerController>(GetController())->ServerSpawnPlayer();
-	SetLifeSpan(1.f);
+	if(IsLocallyControlled()) Cast<ATHPlayerController>(GetController())->Death();
 }
 
 void ABaseHero::SeeScore()

@@ -3,9 +3,12 @@
 
 #include "Frameworks/THGameMode.h"
 
+#include "Frameworks/THPlayerController.h"
+#include "Characters/BaseHero.h"
+
 ATHGameMode::ATHGameMode()
 {
-	//bUseSeamlessTravel = true;
+	bUseSeamlessTravel = true;
 }
 
 void ATHGameMode::PostLogin(APlayerController* NewPlayer)

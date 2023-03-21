@@ -28,5 +28,5 @@ public:
 	void MoveToMainMenu();
 
 private:
-	int32 FinKill = 1;
+	int32 FinKill = 3;
 };

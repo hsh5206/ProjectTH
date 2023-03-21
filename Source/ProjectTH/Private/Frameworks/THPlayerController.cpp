@@ -13,15 +13,48 @@
 #include "DataAssets/HeroData.h"
 #include "Frameworks/GameModes/MatchGameMode_FreeForAll.h"
 #include "Frameworks/GameModes/MainMenuGameMode.h"
+#include "Widgets/Widget_BaseUI.h"
+#include "TimerManager.h"
 
 void ATHPlayerController::BeginPlay()
 {
-	if (IsLocalPlayerController())
+	Super::BeginPlay();
+
+	UE_LOG(LogTemp, Warning, TEXT("PlayerController:BeginPlay"));
+
+	if (HeroSelectionWidgetClass)
 	{
-		ServerSpawnPlayer();
+		HeroSelectWidget = CreateWidget(GetWorld(), HeroSelectionWidgetClass);
+		HeroSelectWidget->AddToViewport();
 	}
+	Death();
 
 	THHUD = Cast<ATHHUD>(GetHUD());
+}
+
+void ATHPlayerController::Death()
+{
+	if (HeroSelectWidget)
+	{
+		HeroSelectWidget->SetVisibility(ESlateVisibility::Visible);
+		SetInputMode(FInputModeUIOnly());
+		SetShowMouseCursor(true);
+	}
+	GetWorldTimerManager().SetTimer(SpawnTimer, this, &ATHPlayerController::ReadyToSpawnPlayer, 10.f, false);
+}
+
+void ATHPlayerController::ReadyToSpawnPlayer()
+{
+	GetWorldTimerManager().ClearTimer(SpawnTimer);
+
+	if (HeroSelectWidget)
+	{
+		HeroSelectWidget->SetVisibility(ESlateVisibility::Hidden);
+		SetInputMode(FInputModeGameOnly());
+		SetShowMouseCursor(false);
+	}
+
+	ServerSpawnPlayer();
 }
 
 void ATHPlayerController::ServerSpawnPlayer_Implementation()

@@ -15,11 +15,18 @@ class PROJECTTH_API ATHPlayerController : public APlayerController
 	GENERATED_BODY()
 	
 public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<class ABaseHero> SelectedHero;
+	void ReadyToSpawnPlayer();
 	UFUNCTION(Server, Reliable)
 	void ServerSpawnPlayer();
+	FTimerHandle SpawnTimer;
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UUserWidget> HeroSelectionWidgetClass;
+	UUserWidget* HeroSelectWidget;
+
+	void Death();
 	virtual void PlayerTick(float DeltaTime);
 	virtual void SpawnDefaultHUD() override;
 

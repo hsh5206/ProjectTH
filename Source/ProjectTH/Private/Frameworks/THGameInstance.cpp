@@ -78,7 +78,7 @@ void UTHGameInstance::CreateSession(int32 PlayerNum, FString Title, FString Map,
 
 		if (!SessionInterface->CreateSession(0, FName("THGame"), SessionSettings))
 		{
-			DestroySession();
+			// DestroySession();
 		}
 	}
 }
@@ -153,7 +153,6 @@ void UTHGameInstance::OnJoinSessionComplete(FName SessionName, EOnJoinSessionCom
 				PlayerController->ClientTravel(Address, ETravelType::TRAVEL_Absolute);
 			}
 		}
-		
 	}
 }
 
