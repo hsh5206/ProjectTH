@@ -37,7 +37,7 @@ void ARevenant_StunBall_Projectile::OnBulletHit(UPrimitiveComponent* HitComponen
 			ObjectTypes,
 			false,
 			IgnoreActors,
-			EDrawDebugTrace::ForDuration,
+			EDrawDebugTrace::None,
 			HitResults,
 			true
 		);
@@ -62,11 +62,11 @@ void ARevenant_StunBall_Projectile::OnBulletHit(UPrimitiveComponent* HitComponen
 						FActiveGameplayEffectHandle ActiveGEHandle = OwnerHero->GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), TargetHero->GetAbilitySystemComponent());
 					}
 
-					// Send Stun Event to Target
-					FGameplayEventData Payload;
-					Payload.Instigator = this;
-					Payload.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Ability.Stun"));
-					UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(TargetHero->GetPlayerState(), Payload.EventTag, Payload);
+					//// Send Stun Event to Target
+					//FGameplayEventData Payload;
+					//Payload.Instigator = this;
+					//Payload.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Ability.Stun"));
+					//UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(TargetHero->GetPlayerState(), Payload.EventTag, Payload);
 
 					FGameplayEffectContextHandle EffectContextToSelf = OwnerHero->GetAbilitySystemComponent()->MakeEffectContext();
 					FGameplayEffectSpecHandle SpecHandleToSelf = OwnerHero->GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffectToSelf, 1, EffectContextToSelf);
@@ -107,6 +107,7 @@ void ARevenant_StunBall_Projectile::BeginPlay()
 
 	if (TracerComponent)
 	{
-		TracerComponent->SetWorldRotation(FRotator(GetActorRotation().Pitch, -GetActorRotation().Yaw, GetActorRotation().Roll));
+		// TracerComponent->SetWorldRotation(FRotator(GetActorRotation().Pitch, -GetActorRotation().Yaw, GetActorRotation().Roll));
+		TracerComponent->SetWorldScale3D(FVector(1.5f, 1.5f, 1.5f));
 	}
 }

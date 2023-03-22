@@ -30,6 +30,7 @@ void AHero_Revenant::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 		if (MRInputAction)
 		{
 			PlayerEnhancedInputComponent->BindAction(MRInputAction, ETriggerEvent::Started, this, &AHero_Revenant::OnMRKey);
+			PlayerEnhancedInputComponent->BindAction(MRInputAction, ETriggerEvent::Completed, this, &AHero_Revenant::OnMRKeyComplete);
 		}
 		if (QInputAction)
 		{
@@ -71,6 +72,19 @@ void AHero_Revenant::OnMRKey()
 		FGameplayEventData Payload;
 		Payload.Instigator = this;
 		Payload.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Ability.MRKey"));
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetPlayerState(), Payload.EventTag, Payload);
+	}
+}
+
+void AHero_Revenant::OnMRKeyComplete()
+{
+	if (IsLocallyControlled())
+	{
+		TraceToCrossHair();
+
+		FGameplayEventData Payload;
+		Payload.Instigator = this;
+		Payload.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Ability.MRKey.Complete"));
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetPlayerState(), Payload.EventTag, Payload);
 	}
 }

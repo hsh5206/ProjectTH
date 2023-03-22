@@ -35,6 +35,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool bCanMR = true;
 	void OnMRKey();
+	void OnMRKeyComplete();
 	/** Q Key */
 	void OnQKey();
 };

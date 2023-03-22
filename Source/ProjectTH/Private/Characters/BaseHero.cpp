@@ -273,6 +273,10 @@ void ABaseHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ABaseHero::OnMoveAction(const FInputActionValue& Value)
 {
+	FGameplayTagContainer OwnedTags;
+	GetAbilitySystemComponent()->GetOwnedGameplayTags(OwnedTags);
+	if (OwnedTags.HasTag(FGameplayTag::RequestGameplayTag(FName("Ability.Movement.Stun")))) return;
+
 	FVector2D MovementVector = Value.Get<FVector2D>();
 
 	if (Controller != nullptr)

@@ -41,7 +41,7 @@ void ATHPlayerController::Death()
 		SetInputMode(FInputModeUIOnly());
 		SetShowMouseCursor(true);
 	}
-	GetWorldTimerManager().SetTimer(SpawnTimer, this, &ATHPlayerController::ReadyToSpawnPlayer, 10.f, false);
+	GetWorldTimerManager().SetTimer(SpawnTimer, this, &ATHPlayerController::ReadyToSpawnPlayer, 3.f, false);
 }
 
 void ATHPlayerController::ReadyToSpawnPlayer()
