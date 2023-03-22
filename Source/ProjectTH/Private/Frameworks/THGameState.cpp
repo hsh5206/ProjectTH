@@ -23,7 +23,6 @@ void ATHGameState::SetMostKill()
 	for (TObjectPtr<APlayerState> PlayerState : PlayerArray)
 	{
 		int32 temp = Cast<ATHPlayerState>(PlayerState)->Kill;
-		UE_LOG(LogTemp, Warning, TEXT("%d"), temp);
 		if (MostKillAmount < temp)
 		{
 			MostKillAmount = temp;

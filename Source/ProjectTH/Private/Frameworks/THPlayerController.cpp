@@ -20,14 +20,15 @@ void ATHPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UE_LOG(LogTemp, Warning, TEXT("PlayerController:BeginPlay"));
-
-	if (HeroSelectionWidgetClass)
+	if (IsLocalPlayerController())
 	{
-		HeroSelectWidget = CreateWidget(GetWorld(), HeroSelectionWidgetClass);
-		HeroSelectWidget->AddToViewport();
+		if (HeroSelectionWidgetClass)
+		{
+			HeroSelectWidget = CreateWidget(GetWorld(), HeroSelectionWidgetClass);
+			HeroSelectWidget->AddToViewport();
+		}
+		Death();
 	}
-	Death();
 
 	THHUD = Cast<ATHHUD>(GetHUD());
 }

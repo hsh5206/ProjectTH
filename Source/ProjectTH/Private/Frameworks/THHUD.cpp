@@ -14,7 +14,7 @@ void ATHHUD::BeginPlay()
 {
 	Super::BeginPlay();
 
-	DefaultBaseUISettingWhenSpawned();
+	// DefaultBaseUISettingWhenSpawned();
 }
 
 void ATHHUD::DefaultBaseUISettingWhenSpawned()
@@ -26,7 +26,6 @@ void ATHHUD::DefaultBaseUISettingWhenSpawned()
 			BaseUI = CreateWidget<UWidget_BaseUI>(THPC, BaseUIClass);
 			BaseUI->AddToViewport();
 
-			// 서버
 			if (ABaseHero* Hero = Cast<ABaseHero>(GetOwningPawn()))
 			{
 				SetSkillImages();
@@ -36,18 +35,14 @@ void ATHHUD::DefaultBaseUISettingWhenSpawned()
 
 		if (ABaseHero* Hero = Cast<ABaseHero>(GetOwningPawn()))
 		{
-			/** 서버만 */
-			if (Hero->HasAuthority())
+			if (ATHPlayerState* THPS = Cast<ATHPlayerState>(Hero->GetPlayerState()))
 			{
-				if (ATHPlayerState* THPS = Cast<ATHPlayerState>(Hero->GetPlayerState()))
+				if (ATHHUD* THHUD = Cast<ATHHUD>(THPC->GetHUD()))
 				{
-					if (ATHHUD* THHUD = Cast<ATHHUD>(THPC->GetHUD()))
-					{
-						THHUD->SetHUDMaxHealth(THPS->GetAttributeSet()->GetMaxHealth());
-						THHUD->SetHUDHealth(THPS->GetAttributeSet()->GetHealth());
-						THHUD->SetHUDBulletNum(THPS->GetAttributeSet()->GetBulletNum());
-						THHUD->SetHUDMaxBulletNum(THPS->GetAttributeSet()->GetMaxBulletNum());
-					}
+					THHUD->SetHUDMaxHealth(THPS->GetAttributeSet()->GetMaxHealth());
+					THHUD->SetHUDHealth(THPS->GetAttributeSet()->GetHealth());
+					THHUD->SetHUDBulletNum(THPS->GetAttributeSet()->GetBulletNum());
+					THHUD->SetHUDMaxBulletNum(THPS->GetAttributeSet()->GetMaxBulletNum());
 				}
 			}
 		}
@@ -157,7 +152,6 @@ void ATHHUD::SetQSkillImage(UTexture2D* Texture)
 		BaseUI->SetQSkillImage(Texture);
 	}
 }
-
 
 void ATHHUD::AddWinScreen(APlayerController* PC)
 {

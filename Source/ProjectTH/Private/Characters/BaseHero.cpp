@@ -154,20 +154,25 @@ void ABaseHero::BeginPlay()
 			ServerSetHPBarPercent(THPS->GetAttributeSet()->GetHealth(), THPS->GetAttributeSet()->GetMaxHealth());
 		}
 	}
+
 }
 
 void ABaseHero::PawnClientRestart()
 {
 	Super::PawnClientRestart();
+	
+	if (IsLocallyControlled())
+	{
+		Cast<ATHHUD>(Cast<ATHPlayerController>(GetController())->GetHUD())->DefaultBaseUISettingWhenSpawned();
+	}
 
-
-	if (ATHPlayerController* THPC = Cast<ATHPlayerController>(GetController()))
+	/*if (ATHPlayerController* THPC = Cast<ATHPlayerController>(GetController()))
 	{
 		if (ATHHUD* THHUD = Cast<ATHHUD>(THPC->GetHUD()))
 		{
 			THHUD->SetSkillImages();
 		}
-	}
+	}*/
 
 	if (GetController())
 	{
@@ -352,14 +357,14 @@ void ABaseHero::OnReload()
 
 void ABaseHero::Death()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Death"));
-
 	//GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	GetMesh()->SetCollisionProfileName(FName("Ragdoll"));
 	GetMesh()->SetSimulatePhysics(true);
 	GetMesh()->AddImpulse(FVector(0.f, 0.f, 5000.f));
 	GetCharacterMovement()->DisableMovement();
-	
+
+	CrossHair->RemoveFromParent();
+
 	GetWorldTimerManager().SetTimer(DeathThenRespawnTimer, this, &ABaseHero::Respawn, .5f, false);
 }
 
