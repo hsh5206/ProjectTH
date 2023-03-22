@@ -99,3 +99,11 @@ void AHero_Revenant::OnQKey()
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetPlayerState(), Payload.EventTag, Payload);
 	}
 }
+
+void AHero_Revenant::SendISeeUEffect()
+{
+	if (IsLocallyControlled())
+	{
+
+	}
+}

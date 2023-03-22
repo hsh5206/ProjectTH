@@ -38,4 +38,9 @@ public:
 	void OnMRKeyComplete();
 	/** Q Key */
 	void OnQKey();
+	void SendISeeUEffect();
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf <class UGameplayEffect> HitEffectToTarget;
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf <class UGameplayEffect> HitEffectToSelf;
 };
