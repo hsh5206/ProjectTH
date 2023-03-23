@@ -7,5 +7,5 @@
 
 void UWidget_HealthBar::SetHPBarPercent(float CurrentHP, float MaxHP)
 {
-	HealthBar->SetPercent(CurrentHP / MaxHP);
+	if(HealthBar) HealthBar->SetPercent(CurrentHP / MaxHP);
 }

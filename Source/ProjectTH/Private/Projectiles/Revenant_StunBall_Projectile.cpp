@@ -53,6 +53,8 @@ void ARevenant_StunBall_Projectile::OnBulletHit(UPrimitiveComponent* HitComponen
 
 				if (ABaseHero* TargetHero = Cast<ABaseHero>(HitResult.GetActor()))
 				{
+					if (TargetHero == OwnerHero) continue;
+
 					FGameplayEffectContextHandle EffectContext = OwnerHero->GetAbilitySystemComponent()->MakeEffectContext();
 					EffectContext.AddHitResult(HitResult);
 					EffectContext.AddInstigator(OwnerHero, OwnerHero);

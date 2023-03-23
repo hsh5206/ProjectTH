@@ -85,7 +85,7 @@ void ABaseHero::PossessedBy(AController* NewController)
 
 	if (HeroData)
 	{
-		if (HeroData->CrossHairClass)
+		if (HeroData->CrossHairClass && IsLocallyControlled())
 		{
 			CrossHair = CreateWidget(GetWorld(), HeroData->CrossHairClass);
 			CrossHair->AddToViewport();
@@ -113,7 +113,7 @@ void ABaseHero::OnRep_PlayerState()
 		}
 	}
 
-	if (HeroData && HeroData->CrossHairClass)
+	if (HeroData && HeroData->CrossHairClass && IsLocallyControlled())
 	{
 		CrossHair = CreateWidget(GetWorld(), HeroData->CrossHairClass);
 		CrossHair->AddToViewport();
@@ -367,7 +367,7 @@ void ABaseHero::Death()
 	GetMesh()->AddImpulse(FVector(0.f, 0.f, 5000.f));
 	GetCharacterMovement()->DisableMovement();
 
-	CrossHair->RemoveFromParent();
+	if(IsLocallyControlled()) CrossHair->RemoveFromParent();
 
 	GetWorldTimerManager().SetTimer(DeathThenRespawnTimer, this, &ABaseHero::Respawn, .5f, false);
 }
@@ -379,7 +379,6 @@ void ABaseHero::Respawn()
 
 void ABaseHero::SeeScore()
 {
-	UE_LOG(LogTemp, Warning, TEXT("SeeScore"));
 	if (!ScoreWidget && ScoreWidgetClass)
 	{
 		ScoreWidget = CreateWidget(GetWorld(), ScoreWidgetClass);
@@ -389,7 +388,6 @@ void ABaseHero::SeeScore()
 
 void ABaseHero::CancelSeeScore()
 {
-	UE_LOG(LogTemp, Warning, TEXT("FinSeeScore"));
 	if (ScoreWidget) ScoreWidget->RemoveFromParent();
 }
 
