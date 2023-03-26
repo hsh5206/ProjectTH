@@ -153,18 +153,18 @@ void ATHPlayerState::OnUltimateGaugeChanged(const FOnAttributeChangeData& Data)
 	}
 }
 
-void ATHPlayerState::AddWinScreen()
+void ATHPlayerState::MulticastAddWinScreen_Implementation()
 {
 	if (OwningTHHUD)
 	{
-		OwningTHHUD->AddWinScreen(GetPlayerController());
+		OwningTHHUD->AddWinScreen(OwningTHController);
 	}
 }
 
-void ATHPlayerState::AddLoseScreen()
+void ATHPlayerState::MulticastAddLoseScreen_Implementation()
 {
 	if (OwningTHHUD)
 	{
-		OwningTHHUD->AddWinScreen(GetPlayerController());
+		OwningTHHUD->AddLoseScreen(OwningTHController);
 	}
 }

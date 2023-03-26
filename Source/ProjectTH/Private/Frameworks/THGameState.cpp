@@ -46,8 +46,6 @@ void ATHGameState::FinishGame()
 
 	for (TObjectPtr<APlayerState> PlayerState : PlayerArray)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("AddViewport"));
-
 		ATHPlayerState* THPS = Cast<ATHPlayerState>(PlayerState);
 		if (THPS)
 		{
@@ -58,11 +56,11 @@ void ATHGameState::FinishGame()
 
 			if (THPS == MostKillUser)
 			{
-				THPS->AddWinScreen();
+				THPS->MulticastAddWinScreen();
 				continue;
 			}
 			 
-			THPS->AddLoseScreen();
+			THPS->MulticastAddLoseScreen();
 		}
 	}
 

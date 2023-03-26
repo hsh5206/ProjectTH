@@ -65,8 +65,8 @@ ABaseHero::ABaseHero()
 	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -88.f));
 	GetMesh()->SetRelativeRotation(FRotator(0.f, 0.f, -80.f));
 
-	HealthBarWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBar"));
-	HealthBarWidget->SetupAttachment(GetRootComponent());
+	//HealthBarWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBar"));
+	//HealthBarWidget->SetupAttachment(GetRootComponent());
 }
 
 // Server
@@ -74,23 +74,14 @@ void ABaseHero::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
-	if (HealthBarWidget->GetWidget())
+	/*if (HealthBarWidget->GetWidget())
 	{
 		if (ATHPlayerState* THPS = Cast<ATHPlayerState>(GetPlayerState()))
 		{
 			Cast<UWidget_HealthBar>(HealthBarWidget->GetWidget())->SetHPBarPercent(THPS->GetAttributeSet()->GetHealth(), THPS->GetAttributeSet()->GetMaxHealth());
 			ServerSetHPBarPercent(THPS->GetAttributeSet()->GetHealth(), THPS->GetAttributeSet()->GetMaxHealth());
 		}
-	}
-
-	if (HeroData)
-	{
-		if (HeroData->CrossHairClass && IsLocallyControlled())
-		{
-			CrossHair = CreateWidget(GetWorld(), HeroData->CrossHairClass);
-			CrossHair->AddToViewport();
-		}
-	}
+	}*/
 
 	// AbilitySystem의 owner와 avatar세팅
 	GetAbilitySystemComponent()->InitAbilityActorInfo(GetPlayerState(), this);
@@ -104,20 +95,14 @@ void ABaseHero::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
 
-	if (HealthBarWidget->GetWidget())
+	/*if (HealthBarWidget->GetWidget())
 	{
 		if (ATHPlayerState* THPS = Cast<ATHPlayerState>(GetPlayerState()))
 		{
 			Cast<UWidget_HealthBar>(HealthBarWidget->GetWidget())->SetHPBarPercent(THPS->GetAttributeSet()->GetHealth(), THPS->GetAttributeSet()->GetMaxHealth());
 			ServerSetHPBarPercent(THPS->GetAttributeSet()->GetHealth(), THPS->GetAttributeSet()->GetMaxHealth());
 		}
-	}
-
-	if (HeroData && HeroData->CrossHairClass && IsLocallyControlled())
-	{
-		CrossHair = CreateWidget(GetWorld(), HeroData->CrossHairClass);
-		CrossHair->AddToViewport();
-	}
+	}*/
 
 	GetAbilitySystemComponent()->InitAbilityActorInfo(GetPlayerState(), this);
 	InitializeAttributes();
@@ -146,33 +131,31 @@ void ABaseHero::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (!HasAuthority() && HealthBarWidget->GetWidget())
+	/*if (!HasAuthority() && HealthBarWidget->GetWidget())
 	{
 		if (ATHPlayerState* THPS = Cast<ATHPlayerState>(GetPlayerState()))
 		{
 			Cast<UWidget_HealthBar>(HealthBarWidget->GetWidget())->SetHPBarPercent(THPS->GetAttributeSet()->GetHealth(), THPS->GetAttributeSet()->GetMaxHealth());
 			ServerSetHPBarPercent(THPS->GetAttributeSet()->GetHealth(), THPS->GetAttributeSet()->GetMaxHealth());
 		}
-	}
+	}*/
 
 }
 
 void ABaseHero::PawnClientRestart()
 {
 	Super::PawnClientRestart();
-	
+
+	if (HeroData && HeroData->CrossHairClass && IsLocallyControlled())
+	{
+		CrossHair = CreateWidget(GetWorld(), HeroData->CrossHairClass);
+		CrossHair->AddToViewport();
+	}
+
 	if (IsLocallyControlled())
 	{
 		Cast<ATHHUD>(Cast<ATHPlayerController>(GetController())->GetHUD())->DefaultBaseUISettingWhenSpawned();
 	}
-
-	/*if (ATHPlayerController* THPC = Cast<ATHPlayerController>(GetController()))
-	{
-		if (ATHHUD* THHUD = Cast<ATHHUD>(THPC->GetHUD()))
-		{
-			THHUD->SetSkillImages();
-		}
-	}*/
 
 	if (GetController())
 	{
@@ -446,15 +429,15 @@ void ABaseHero::MulticastSetCrossHairHitLocation_Implementation(const FHitResult
 	CrossHairHitLocation = TraceHitResult.ImpactPoint;
 }
 
-void ABaseHero::ServerSetHPBarPercent_Implementation(const float& CurrentHP, const float& MaxHP)
-{
-	MulticastSetHPBarPercent(CurrentHP, MaxHP);
-}
+//void ABaseHero::ServerSetHPBarPercent_Implementation(const float& CurrentHP, const float& MaxHP)
+//{
+//	MulticastSetHPBarPercent(CurrentHP, MaxHP);
+//}
 
-void ABaseHero::MulticastSetHPBarPercent_Implementation(const float& CurrentHP, const float& MaxHP)
-{
-	Cast<UWidget_HealthBar>(HealthBarWidget->GetWidget())->SetHPBarPercent(CurrentHP, MaxHP);
-}
+//void ABaseHero::MulticastSetHPBarPercent_Implementation(const float& CurrentHP, const float& MaxHP)
+//{
+//	Cast<UWidget_HealthBar>(HealthBarWidget->GetWidget())->SetHPBarPercent(CurrentHP, MaxHP);
+//}
 
 /** AbilitySystem */
 void ABaseHero::InitializeAttributes()

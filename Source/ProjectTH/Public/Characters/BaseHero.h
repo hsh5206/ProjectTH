@@ -104,10 +104,10 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UWidgetComponent* HealthBarWidget;
-	UFUNCTION(Server, Reliable)
-	void ServerSetHPBarPercent(const float& CurrentHP, const float& MaxHP);
-	UFUNCTION(NetMulticast, Reliable)
-	void MulticastSetHPBarPercent(const float& CurrentHP, const float& MaxHP);
+	//UFUNCTION(Server, Reliable)
+	//void ServerSetHPBarPercent(const float& CurrentHP, const float& MaxHP);
+	//UFUNCTION(NetMulticast, Reliable)
+	//void MulticastSetHPBarPercent(const float& CurrentHP, const float& MaxHP);
 
 public:
 	virtual void InitializeAttributes();

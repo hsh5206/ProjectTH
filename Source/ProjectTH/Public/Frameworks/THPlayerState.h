@@ -45,8 +45,10 @@ public:
 	virtual void OnBulletNumChanged(const FOnAttributeChangeData& Data);
 	virtual void OnUltimateGaugeChanged(const FOnAttributeChangeData& Data);
 
-	void AddWinScreen();
-	void AddLoseScreen();
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastAddWinScreen();
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastAddLoseScreen();
 
 private:
 	class ATHPlayerController* OwningTHController;

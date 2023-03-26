@@ -56,10 +56,10 @@ void ATHHUD::SetHUDHealth(float Health)
 		BaseUI->SetHealthText(Health);
 		BaseUI->SetHealthBarPercent(Health, BaseUI->GetMaxHealthText());
 
-		if (ABaseHero* Hero = Cast<ABaseHero>(GetOwningPawn()))
+		/*if (ABaseHero* Hero = Cast<ABaseHero>(GetOwningPawn()))
 		{
 			Hero->ServerSetHPBarPercent(Health, BaseUI->GetMaxHealthText());
-		}
+		}*/
 	}
 }
 
@@ -70,10 +70,10 @@ void ATHHUD::SetHUDMaxHealth(float MaxHealth)
 		BaseUI->SetMaxHealthText(MaxHealth);
 		BaseUI->SetHealthBarPercent(BaseUI->GetHealthText(), MaxHealth);
 
-		if (ABaseHero* Hero = Cast<ABaseHero>(GetOwningPawn()))
+		/*if (ABaseHero* Hero = Cast<ABaseHero>(GetOwningPawn()))
 		{
 			Hero->ServerSetHPBarPercent(BaseUI->GetHealthText(), MaxHealth);
-		}
+		}*/
 	}
 }
 

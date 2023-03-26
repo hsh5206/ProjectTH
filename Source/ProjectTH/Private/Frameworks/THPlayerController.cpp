@@ -83,11 +83,11 @@ void ATHPlayerController::OnPossess(APawn* aPawn)
 {
 	Super::OnPossess(aPawn);
 
-	if (ABaseHero* Hero = Cast<ABaseHero>(aPawn))
+	/*if (ABaseHero* Hero = Cast<ABaseHero>(aPawn))
 	{
 		if (ATHPlayerState* THPS = Cast<ATHPlayerState>(Hero->GetPlayerState()))
 		{
 			Hero->ServerSetHPBarPercent(THPS->GetAttributeSet()->GetHealth(), THPS->GetAttributeSet()->GetMaxHealth());
 		}
-	}
+	}*/
 }
